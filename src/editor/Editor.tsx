@@ -1,14 +1,29 @@
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import Preact from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
-import '../index.css';
-import styles from './Editor.module.css';
-import './userWorker';
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import Preact from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
+import "../index.css";
+import styles from "./Editor.module.css";
+import "./userWorker";
+import { Command, getCommands, setCommands } from "../storage";
 
 const Editor: Preact.FunctionComponent = () => {
   const [editor, setEditor] =
     useState<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoEl = useRef(null);
+
+  const [commands, setCmds] = useState<Command[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      await setCommands([
+        {
+          name: "asdf",
+          code: "console.log('asdf');",
+        },
+      ]);
+      setCmds(await getCommands());
+    })();
+  }, []);
 
   useEffect(() => {
     if (monacoEl) {
@@ -16,11 +31,11 @@ const Editor: Preact.FunctionComponent = () => {
         if (editor) return;
 
         return monaco.editor.create(monacoEl.current!, {
-          value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
-            '\n'
+          value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join(
+            "\n"
           ),
-          language: 'javascript',
-          theme: 'atom-one-dark',
+          language: "javascript",
+          theme: "atom-one-dark",
         }) as monaco.editor.IStandaloneCodeEditor | any;
       });
     }
@@ -31,7 +46,7 @@ const Editor: Preact.FunctionComponent = () => {
   return (
     <div>
       <h1>
-        Shortcut: {new URLSearchParams(window.location.search).get('shortcut')}
+        Shortcut: {new URLSearchParams(window.location.search).get("shortcut")}
       </h1>
       <p>
         How to run a command:
@@ -49,17 +64,17 @@ const Editor: Preact.FunctionComponent = () => {
         Available commands:
         <br />
         <div className="flex flex-row">
-          <code className="ml-5">
-            <pre>{`newTab(url: string)`}</pre>
-          </code>
-          ,
-          <code className="ml-5">
-            <pre>{`newWindow(url: string)`}</pre>
-          </code>
-          ,
-          <code className="ml-5">
-            <pre>{`newIncognitoWindow(url: string)`}</pre>
-          </code>
+          {commands.map((cmd) => (
+            <div className="flex flex-row">
+              <code className="mr-2">
+                <pre>{cmd.name}</pre>
+              </code>
+              :
+              <code className="ml-2">
+                <pre>{cmd.code}</pre>
+              </code>
+            </div>
+          ))}
         </div>
       </p>
       <label for="themePicker">Theme</label>
@@ -79,7 +94,7 @@ const Editor: Preact.FunctionComponent = () => {
         onClick={() => {
           monaco.editor
             .getEditors()[0]
-            .getAction('editor.action.formatDocument')
+            .getAction("editor.action.formatDocument")
             .run();
         }}
       >
