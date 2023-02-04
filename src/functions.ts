@@ -316,6 +316,94 @@ export function nextPage() {
     });
 }
 
+export function reloadPage() {
+    chrome.tabs.reload();
+}
+
+export function reloadPageBypassingCache() {
+    chrome.tabs.reload({ bypassCache: true });
+}
+
+export function replaceTextInPage(find: string, replace: string) {
+    chrome.tabs.executeScript({
+        code: `document.body.innerHTML = document.body.innerHTML.replace(/${find}/g, '${replace}');`,
+    });
+}
+
+export function downloadPage() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]) {
+            chrome.downloads.download({
+                url: tabs[0].url ? tabs[0].url : '',
+            });
+        }
+    });
+}
+
+export function downloadImage() {
+    chrome.tabs.executeScript({
+        code: `document.querySelector('img').src;`,
+    }, (results) => {
+        if (results) {
+            chrome.downloads.download({
+                url: results[0],
+            });
+        }
+    });
+}
+
+export function postMessageToActiveTab(message: any) {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]) {
+            chrome.tabs.sendMessage(tabs[0].id ? tabs[0].id : 0, message);
+        }
+    });
+}
+
+export function switchToTabByIndex(tabId: number) {
+    chrome.tabs.update(tabId, { active: true });
+}
+
+export const switchToTab = (callback: (tab: chrome.tabs.Tab) => boolean) => {
+    chrome.tabs.query({ currentWindow: true }, (tabs) => {
+        const tab = tabs.find(callback);
+        if (tab) {
+            tab.id ? chrome.tabs.update(tab.id, { active: true }) : null;
+        }
+    });
+}
+
+export function switchToTabByTitle(title: string) {
+    switchToTab((tab) => tab.title === title);
+}
+
+export function switchToTabByUrlContains(url: string) {
+    switchToTab((tab) => tab.url ? tab.url.includes(url) : false);
+}
+
+export function startReadingAloud() {
+    chrome.tts.speak(document.body.innerText);
+}
+
+export function stopReadingAloud() {
+    chrome.tts.stop();
+}
+
+export function reopenClosedTab(numberOfTabs = 1) {
+    chrome.sessions.getRecentlyClosed({ maxResults: numberOfTabs }, (sessions) => {
+        sessions.forEach((session) => {
+            if (session.tab) {
+                chrome.sessions.restore(session.tab.sessionId);
+            }
+        });
+    });
+}
+
+
+
+
+
+
 
 
 
