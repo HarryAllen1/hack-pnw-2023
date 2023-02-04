@@ -5,6 +5,7 @@ import '../index.css';
 import { Command, getCommands, setCommands } from '../storage';
 import styles from './Editor.module.css';
 import './userWorker';
+import functions from './functions?raw';
 
 const Editor: Preact.FunctionComponent = () => {
 	const [editor, setEditor] =
@@ -29,6 +30,16 @@ const Editor: Preact.FunctionComponent = () => {
 		if (monacoEl) {
 			setEditor((editor) => {
 				if (editor) return;
+
+				monaco.languages.typescript.javascriptDefaults.addExtraLib(
+					functions,
+					'ts:filename/functions.d.ts'
+				);
+				monaco.editor.createModel(
+					functions,
+					'typescript',
+					monaco.Uri.parse('ts:filename/functions.d.ts')
+				);
 
 				return monaco.editor.create(monacoEl.current!, {
 					value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
