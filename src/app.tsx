@@ -11,7 +11,7 @@ export const App: FunctionComponent = () => {
         const module = modules[key];
         return (
           <div>
-            <h1>{key}</h1>
+            <h1>{key.split('/').pop()}</h1>
             <button onClick={() => module().then((m: any) => m.default())}>
               Run
             </button>
