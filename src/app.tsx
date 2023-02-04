@@ -1,12 +1,15 @@
+import { FunctionComponent } from 'preact';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import './app.css';
 import { Command, getCommands, setCommands } from './storage';
-import { FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
 
 const modules = import.meta.glob('./functions/**/*.ts');
 
 export const App: FunctionComponent = () => {
-  let [commands, setCmds] = useState<Command[]>([]);
+  const [commands, setCmds] = useState<Command[]>([]);
+  const [creating, setCreating] = useState(false);
+  const newInput = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     (async () => {
       await setCommands([
@@ -86,14 +89,39 @@ export const App: FunctionComponent = () => {
         ))}
       </div>
       <div>
-        <button
-          class="btn"
-          onClick={() => {
-            window.open('editor.html', 'editor');
-          }}
-        >
-          New
-        </button>
+        {creating ? (
+          <>
+            <input placeholder="Name" ref={newInput} />
+            <button
+              onClick={async () => {
+                await setCommands([
+                  ...(await getCommands()),
+                  {
+                    name: newInput.current?.value ?? 'New Command',
+                    code: "console.log('Hello World!');",
+                  },
+                ]);
+                setCmds(await getCommands());
+                window.open(
+                  `editor.html?name=${newInput.current?.value}`,
+                  'editor',
+                  'popup'
+                );
+              }}
+            >
+              Create
+            </button>
+          </>
+        ) : (
+          <button
+            class="btn"
+            onClick={() => {
+              setCreating(true);
+            }}
+          >
+            New
+          </button>
+        )}
       </div>
     </div>
   );
