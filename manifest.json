@@ -3,6 +3,17 @@
   "name": "Shortcut Manager",
   "version": "0.0.1",
   "description": "Create macros for various actions",
+  "permissions": [
+    "tabs",
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking",
+    "contextMenus",
+    "storage",
+    "unlimitedStorage",
+    "alarms",
+    "<all_urls>"
+  ],
   "icons": {
     "24": "icons/icon-24.png",
     "36": "icons/icon-36.png",
