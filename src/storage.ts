@@ -24,3 +24,17 @@ export const setCommand = async (name: string, code: string) => {
   else commands[index].code = code;
   await setCommands(commands);
 };
+
+export const getEditorTheme = async (): Promise<string> => {
+  if (typeof chrome !== 'undefined' && 'storage' in chrome)
+    return (
+      (await chrome.storage.sync.get('editorTheme')).editorTheme ?? 'light'
+    );
+  else return localStorage.getItem('editorTheme') ?? 'light';
+};
+
+export const setEditorTheme = async (theme: string) => {
+  if (typeof chrome !== 'undefined' && 'storage' in chrome)
+    await chrome.storage.sync.set({ editorTheme: theme });
+  else localStorage.setItem('editorTheme', theme);
+};
