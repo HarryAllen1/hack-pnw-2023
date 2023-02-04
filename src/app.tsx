@@ -14,7 +14,7 @@ export function App() {
         return (
           <div>
             <h1>{key}</h1>
-            <button onClick={() => module().then((m) => m.default())}>
+            <button onClick={() => module().then((m : any) => m.default())}>
               Run
             </button>
           </div>
