@@ -10,8 +10,6 @@ const Editor: Preact.FunctionComponent = () => {
     useState<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoEl = useRef(null);
 
-  let commandFlow: string[] = [];
-
   useEffect(() => {
     if (monacoEl) {
       setEditor((editor) => {
@@ -32,52 +30,38 @@ const Editor: Preact.FunctionComponent = () => {
 
   return (
     <div>
-      <div className={styles.functions}>
-        <h3>Functions</h3>
-        <ul>
-          <li>
-            <button
-              onClick={() => {
-                commandFlow.push(
-                  'Open New Tab : ' + document.getElementById('urlNewTab')
-                    ? (document.getElementById('urlNewTab') as HTMLInputElement)
-                        .value
-                    : ''
-                );
-              }}
-            >
-              Open New Tab :
-            </button>
-            <input type="text" id="urlNewTab" name="url" />
-          </li>
-          <li>
-            <button
-              onClick={() => {
-                commandFlow.push(
-                  'Open New Window : ' + document.getElementById('urlNewWindow')
-                    ? (
-                        document.getElementById(
-                          'urlNewWindow'
-                        ) as HTMLInputElement
-                      ).value
-                    : ''
-                );
-              }}
-            >
-              Open New Window :
-            </button>
-            <input type="text" id="urlNewWindow" name="url" />
-          </li>
-        </ul>
-      </div>
-
-      <div className={styles.viewFlow}>
-        <h3>Command Flow</h3>
-        {commandFlow.map((command) => {
-          return <div>{command}</div>;
-        })}
-      </div>
-
+      <h1>
+        Shortcut: {new URLSearchParams(window.location.search).get('shortcut')}
+      </h1>
+      <p>
+        How to run a command:
+        <br />
+        commandName(arg1, arg2, arg3, ...)
+        <br />
+        <br />
+        Example:
+        <code>
+          <pre>{`newTab("https://google.com")`}</pre>
+        </code>
+      </p>
+      <br />
+      <p>
+        Available commands:
+        <br />
+        <div className="flex flex-row">
+          <code className="ml-5">
+            <pre>{`newTab(url: string)`}</pre>
+          </code>
+          ,
+          <code className="ml-5">
+            <pre>{`newWindow(url: string)`}</pre>
+          </code>
+          ,
+          <code className="ml-5">
+            <pre>{`newIncognitoWindow(url: string)`}</pre>
+          </code>
+        </div>
+      </p>
       <label for="themePicker">Theme</label>
       <select
         onChange={(e) => {
