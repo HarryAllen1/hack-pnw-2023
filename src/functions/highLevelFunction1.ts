@@ -1,5 +1,4 @@
 //this function can only call functions in lower folder levels
-
-export function highLevelFunction1() {
-    //do something
+export default function highLevelFunction1() {
+    console.log ("this is a high level function.");
 }
