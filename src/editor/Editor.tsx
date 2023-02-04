@@ -2,15 +2,9 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import Preact from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import '../index.css';
+import { Command, getCommands, setCommands } from '../storage';
 import styles from './Editor.module.css';
 import './userWorker';
-import {
-	Command,
-	getCommands,
-	getEditorTheme,
-	setCommands,
-	setEditorTheme,
-} from '../storage';
 
 const Editor: Preact.FunctionComponent = () => {
 	const [editor, setEditor] =
@@ -52,7 +46,7 @@ const Editor: Preact.FunctionComponent = () => {
 	return (
 		<div>
 			<h1>
-				Shortcut: {new URLSearchParams(window.location.search).get('shortcut')}
+				Shortcut: {new URLSearchParams(window.location.search).get('name')}
 			</h1>
 			<p>
 				How to run a command:
