@@ -1,16 +1,14 @@
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import Preact from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
-import '../index.css';
-import styles from './Editor.module.css';
-import './userWorker';
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import Preact from "preact";
+import { useEffect, useRef, useState } from "preact/hooks";
+import "../index.css";
+import styles from "./Editor.module.css";
+import "./userWorker";
 
 const Editor: Preact.FunctionComponent = () => {
   const [editor, setEditor] =
     useState<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoEl = useRef(null);
-
-  let commandFlow : string[] = [];
 
   useEffect(() => {
     if (monacoEl) {
@@ -18,11 +16,11 @@ const Editor: Preact.FunctionComponent = () => {
         if (editor) return;
 
         return monaco.editor.create(monacoEl.current!, {
-          value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
-            '\n'
+          value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join(
+            "\n"
           ),
-          language: 'javascript',
-          theme: 'atom-one-dark',
+          language: "javascript",
+          theme: "atom-one-dark",
         }) as monaco.editor.IStandaloneCodeEditor | any;
       });
     }
@@ -31,42 +29,39 @@ const Editor: Preact.FunctionComponent = () => {
   }, [monacoEl.current]);
 
   return (
-    <div>   
-      <div className={styles.functions}>
-        <h3>Functions</h3>
-        <ul>
-          <li>  
-            <button
-              onClick={() => {
-                commandFlow.push('Open New Tab : ' + document.getElementById('urlNewTab') ? (document.getElementById('urlNewTab') as HTMLInputElement).value : '');
-              }}
-            >
-              Open New Tab : 
-            </button>
-            <input type="text" id="urlNewTab" name="url" />
-          </li>
-          <li>
-            <button
-              onClick={() => {
-                commandFlow.push('Open New Window : ' + document.getElementById('urlNewWindow') ? (document.getElementById('urlNewWindow') as HTMLInputElement).value : '');
-              }}
-            >
-              Open New Window : 
-            </button>
-            <input type="text" id="urlNewWindow" name="url" />
-          </li>
-          </ul>
-      </div>
-
-      <div className={styles.viewFlow}>
-        <h3>Command Flow</h3>
-        {commandFlow.map((command) => {
-          return <div>{command}</div>;
-        }) 
-        }
-      </div>
-
-
+    <div>
+      <h1>
+        Shortcut: {new URLSearchParams(window.location.search).get("shortcut")}
+      </h1>
+      <p>
+        How to run a command:
+        <br />
+        commandName(arg1, arg2, arg3, ...)
+        <br />
+        <br />
+        Example:
+        <code>
+          <pre>{`newTab("https://google.com")`}</pre>
+        </code>
+      </p>
+      <br />
+      <p>
+        Available commands:
+        <br />
+        <div className="flex flex-row">
+          <code className="ml-5">
+            <pre>{`newTab(url: string)`}</pre>
+          </code>
+          ,
+          <code className="ml-5">
+            <pre>{`newWindow(url: string)`}</pre>
+          </code>
+          ,
+          <code className="ml-5">
+            <pre>{`newIncognitoWindow(url: string)`}</pre>
+          </code>
+        </div>
+      </p>
       <label for="themePicker">Theme</label>
       <select
         onChange={(e) => {
@@ -84,7 +79,7 @@ const Editor: Preact.FunctionComponent = () => {
         onClick={() => {
           monaco.editor
             .getEditors()[0]
-            .getAction('editor.action.formatDocument')
+            .getAction("editor.action.formatDocument")
             .run();
         }}
       >
