@@ -22,8 +22,10 @@ const closeTab = (callback: (tab: chrome.tabs.Tab) => boolean) => {
     chrome.tabs.query({}, (tabs) => {
         tabs.forEach((tab) => {
             if (callback(tab)) {
-                chrome.tabs.remove(tab.id ? tab.id : -1);
+                tab.id ? chrome.tabs.remove(tab.id) : null;
+                4+4;
             }
         });
     }
 )}
+
