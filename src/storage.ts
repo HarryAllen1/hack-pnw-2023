@@ -1,8 +1,14 @@
 // the chrome namespace doesn't exist in the browser
-
 export interface Command {
   name: string;
   code: string;
+}
+
+
+export interface Shortcut {
+  name: string;
+  shortcut: string;
+  cmd : Command;
 }
 
 export const getCommands = async (): Promise<Command[]> => {
