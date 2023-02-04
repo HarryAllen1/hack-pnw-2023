@@ -1,11 +1,18 @@
 // the chrome namespace doesn't exist in the browser
 
-export const getCommands = async (): Promise<{ [key: string]: any }> => {
-  if (chrome) return chrome.storage.sync.get('commands');
-  else return JSON.parse(localStorage.getItem('commands') ?? '{}');
+export interface Command {
+  name: string;
+  code: string;
+}
+
+export const getCommands = async (): Promise<Command[]> => {
+  if (typeof chrome !== 'undefined' && 'storage' in chrome)
+    return (await chrome.storage.sync.get('commands')).commands ?? [];
+  else return JSON.parse(localStorage.getItem('commands') ?? '[]');
 };
 
-export const setSettings = (settings: Record<string, any>) => {
-  if (chrome) chrome.storage.sync.set({ settings });
-  else localStorage.setItem('settings', JSON.stringify(settings));
+export const setCommands = async (commands: Command[]) => {
+  if (typeof chrome !== 'undefined' && 'storage' in chrome)
+    await chrome.storage.sync.set({ commands });
+  else localStorage.setItem('commands', JSON.stringify(commands));
 };
