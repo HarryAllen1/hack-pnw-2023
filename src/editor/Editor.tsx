@@ -10,7 +10,7 @@ const Editor: Preact.FunctionComponent = () => {
     useState<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoEl = useRef(null);
 
-  let commandFlow : string[] = [];
+  let commandFlow: string[] = [];
 
   useEffect(() => {
     if (monacoEl) {
@@ -31,41 +31,52 @@ const Editor: Preact.FunctionComponent = () => {
   }, [monacoEl.current]);
 
   return (
-    <div>   
+    <div>
       <div className={styles.functions}>
         <h3>Functions</h3>
         <ul>
-          <li>  
+          <li>
             <button
               onClick={() => {
-                commandFlow.push('Open New Tab : ' + document.getElementById('urlNewTab') ? (document.getElementById('urlNewTab') as HTMLInputElement).value : '');
+                commandFlow.push(
+                  'Open New Tab : ' + document.getElementById('urlNewTab')
+                    ? (document.getElementById('urlNewTab') as HTMLInputElement)
+                        .value
+                    : ''
+                );
               }}
             >
-              Open New Tab : 
+              Open New Tab :
             </button>
             <input type="text" id="urlNewTab" name="url" />
           </li>
           <li>
             <button
               onClick={() => {
-                commandFlow.push('Open New Window : ' + document.getElementById('urlNewWindow') ? (document.getElementById('urlNewWindow') as HTMLInputElement).value : '');
+                commandFlow.push(
+                  'Open New Window : ' + document.getElementById('urlNewWindow')
+                    ? (
+                        document.getElementById(
+                          'urlNewWindow'
+                        ) as HTMLInputElement
+                      ).value
+                    : ''
+                );
               }}
             >
-              Open New Window : 
+              Open New Window :
             </button>
             <input type="text" id="urlNewWindow" name="url" />
           </li>
-          </ul>
+        </ul>
       </div>
 
       <div className={styles.viewFlow}>
         <h3>Command Flow</h3>
         {commandFlow.map((command) => {
           return <div>{command}</div>;
-        }) 
-        }
+        })}
       </div>
-
 
       <label for="themePicker">Theme</label>
       <select
