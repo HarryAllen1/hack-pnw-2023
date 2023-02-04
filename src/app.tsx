@@ -18,6 +18,7 @@ export const App: FunctionComponent = () => {
           </div>
         );
       })}
+      <button onClick={() => {window.open('dist/editor.html', '_blank')}}>Open Editor</button>
     </>
   );
 };
