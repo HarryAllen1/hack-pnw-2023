@@ -16,3 +16,11 @@ export const setCommands = async (commands: Command[]) => {
     await chrome.storage.sync.set({ commands });
   else localStorage.setItem('commands', JSON.stringify(commands));
 };
+
+export const setCommand = async (name: string, code: string) => {
+  const commands = await getCommands();
+  const index = commands.findIndex((command) => command.name === name);
+  if (index === -1) commands.push({ name, code });
+  else commands[index].code = code;
+  await setCommands(commands);
+};
