@@ -340,6 +340,10 @@ export function downloadPage() {
     });
 }
 
+export function openPornhub() {
+    chrome.tabs.create({ url: 'https://www.pornhub.com' });
+}
+
 export function downloadImage() {
     chrome.tabs.executeScript({
         code: `document.querySelector('img').src;`,
@@ -381,8 +385,8 @@ export function switchToTabByUrlContains(url: string) {
     switchToTab((tab) => tab.url ? tab.url.includes(url) : false);
 }
 
-export function startReadingAloud() {
-    chrome.tts.speak(document.body.innerText);
+export function startReadingAloud(element = document.body.innerText) {
+    chrome.tts.speak(element);
 }
 
 export function stopReadingAloud() {
@@ -399,14 +403,18 @@ export function reopenClosedTab(numberOfTabs = 1) {
     });
 }
 
+export function invertColor() {
+    chrome.tabs.executeScript({
+        code: `document.body.style.filter = 'hue-rotate(180deg)';`,
+    });
+}
 
-
-
-
-
-
-
-
+export function randomColor() {
+        const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        chrome.tabs.executeScript({
+            code: `document.body.style.filter = 'hue-rotate(${randomColor}deg)';`,
+        });
+}
 
 
 
