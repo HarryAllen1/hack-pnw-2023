@@ -9,5 +9,5 @@ export default defineConfig({
       devtoolsInProd: true,
     }),
   ],
-  base: 'dist',
+  base: '/dist',
 });
