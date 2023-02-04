@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@preact/preset-vite': ^2.5.0
+  '@types/chrome': ^0.0.212
   '@types/node': ^18.11.18
   monaco-editor: ^0.34.1
   preact: ^10.11.3
@@ -14,6 +15,7 @@ dependencies:
 
 devDependencies:
   '@preact/preset-vite': 2.5.0_preact@10.11.3+vite@4.1.1
+  '@types/chrome': 0.0.212
   '@types/node': 18.11.18
   typescript: 4.9.5
   vite: 4.1.1_@types+node@18.11.18
@@ -560,6 +562,27 @@ packages:
     dependencies:
       estree-walker: 2.0.2
       picomatch: 2.3.1
+    dev: true
+
+  /@types/chrome/0.0.212:
+    resolution: {integrity: sha512-O9blKfj6mQyBvkexEa71xcpRfkjAu8izQD3qGYfdwffk+mJhF7eogz628bZr5dETT6Eu7vU0stUGYG/+EQWj9g==}
+    dependencies:
+      '@types/filesystem': 0.0.32
+      '@types/har-format': 1.2.10
+    dev: true
+
+  /@types/filesystem/0.0.32:
+    resolution: {integrity: sha512-Yuf4jR5YYMR2DVgwuCiP11s0xuVRyPKmz8vo6HBY3CGdeMj8af93CFZX+T82+VD1+UqHOxTq31lO7MI7lepBtQ==}
+    dependencies:
+      '@types/filewriter': 0.0.29
+    dev: true
+
+  /@types/filewriter/0.0.29:
+    resolution: {integrity: sha512-BsPXH/irW0ht0Ji6iw/jJaK8Lj3FJemon2gvEqHKpCdDCeemHa+rI3WBGq5z7cDMZgoLjY40oninGxqk+8NzNQ==}
+    dev: true
+
+  /@types/har-format/1.2.10:
+    resolution: {integrity: sha512-o0J30wqycjF5miWDKYKKzzOU1ZTLuA42HZ4HE7/zqTOc/jTLdQ5NhYWvsRQo45Nfi1KHoRdNhteSI4BAxTF1Pg==}
     dev: true
 
   /@types/node/18.11.18:
