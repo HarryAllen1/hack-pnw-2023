@@ -18,7 +18,7 @@ function openNewTab(url = defaulturl, incognito = false, newWindow = false, focu
 }
 
 
-const closeTab = (callback: (tab: chrome.tabs.Tab) => boolean){
+const closeTab = (callback: (tab: chrome.tabs.Tab) => boolean) => {
     chrome.tabs.query({}, (tabs) => {
         tabs.forEach((tab) => {
             if (callback(tab)) {
