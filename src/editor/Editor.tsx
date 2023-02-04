@@ -1,8 +1,8 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import Preact from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import './userWorker';
 import styles from './Editor.module.css';
-import '../editor/userWorker';
 
 const Editor: Preact.FunctionComponent = () => {
   const [editor, setEditor] =
@@ -19,7 +19,7 @@ const Editor: Preact.FunctionComponent = () => {
             '\n'
           ),
           language: 'javascript',
-          theme: 'vs-dark',
+          theme: 'atom-one-dark',
         }) as monaco.editor.IStandaloneCodeEditor | any;
       });
     }
@@ -27,7 +27,34 @@ const Editor: Preact.FunctionComponent = () => {
     return () => editor?.dispose();
   }, [monacoEl.current]);
 
-  return <div className={styles.Editor} ref={monacoEl}></div>;
+  return (
+    <div>
+      <label for="themePicker">Theme</label>
+      <select
+        onChange={(e) => {
+          if ((e.target as HTMLSelectElement).value)
+            monaco.editor.setTheme((e.target as HTMLSelectElement).value);
+        }}
+        name="themePicker"
+        id="themePicker"
+      >
+        <option value=""></option>
+        <option value="vs-dark">VS Dark</option>
+        <option value="vs">VS Light</option>
+      </select>
+      <button
+        onClick={() => {
+          monaco.editor
+            .getEditors()[0]
+            .getAction('editor.action.formatDocument')
+            .run();
+        }}
+      >
+        Format
+      </button>
+      <div className={styles.Editor} ref={monacoEl}></div>
+    </div>
+  );
 };
 
 export default Editor;
