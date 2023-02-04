@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'preact';
-import Editor from './Editor';
 import './app.css';
 
 const modules = import.meta.glob('./functions/**/*.ts');
@@ -19,7 +18,6 @@ export const App: FunctionComponent = () => {
           </div>
         );
       })}
-      <Editor />
     </>
   );
 };

@@ -2,7 +2,7 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import Preact from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import styles from './Editor.module.css';
-import './userWorker';
+import '../editor/userWorker';
 
 const Editor: Preact.FunctionComponent = () => {
   const [editor, setEditor] =
@@ -18,7 +18,7 @@ const Editor: Preact.FunctionComponent = () => {
           value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
             '\n'
           ),
-          language: 'typescript',
+          language: 'javascript',
           theme: 'vs-dark',
         }) as monaco.editor.IStandaloneCodeEditor | any;
       });
