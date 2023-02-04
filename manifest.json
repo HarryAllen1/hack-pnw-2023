@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Shortcut Manager",
+  "version": "0.0.1",
+  "description": "Create macros for various actions",
+  "icons": {
+    "24": "icons/icon-24.png",
+    "36": "icons/icon-36.png",
+    "48": "icons/icon-48.png"
+  }
+}
