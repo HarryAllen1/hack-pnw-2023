@@ -243,6 +243,82 @@ export function setZoom(amount: number) {
     chrome.tabs.setZoom(amount);
 }
 
+export function waitForTabToLoad(callback: () => void) {
+    chrome.tabs.onUpdated.addListener(function listener(tabId, changeInfo) {
+        if (changeInfo.status === 'complete') {
+            chrome.tabs.onUpdated.removeListener(listener);
+            callback();
+        }
+    });
+}
+
+export function waitSeconds(seconds: number) {
+    return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+}
+
+export function waitMilliseconds(milliseconds: number) {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+export function waitUntilElementExists(selector: string) {
+    return new Promise<void>((resolve) => {
+        const interval = setInterval(() => {
+            if (document.querySelector(selector)) {
+                clearInterval(interval);
+                resolve();
+            }
+        }, 100);
+    });
+}
+
+export function clickOn(selector: string) {
+    const element = document.querySelector(selector);
+    if (element) {
+        (element as HTMLElement).click();
+    }
+}
+
+export function previousTab() {
+    chrome.tabs.query({ currentWindow: true }, (tabs) => {
+        if (tabs[0]) {
+            const activeTabIndex = tabs.findIndex((tab) => tab.active);
+            const previousTabIndex = activeTabIndex - 1;
+            const previousTab = tabs[previousTabIndex];
+            if (previousTab) {
+                previousTab.id ? chrome.tabs.update(previousTab.id, { active: true }) : null;
+            }
+        }
+    });
+}
+
+export function nextTab() {
+    chrome.tabs.query({ currentWindow: true }, (tabs) => {
+        if (tabs[0]) {
+            const activeTabIndex = tabs.findIndex((tab) => tab.active);
+            const nextTabIndex = activeTabIndex + 1;
+            const nextTab = tabs[nextTabIndex];
+            if (nextTab) {
+                nextTab.id ? chrome.tabs.update(nextTab.id, { active: true }) : null;
+            }
+        }
+    });
+}
+
+export function previousPage() {
+    chrome.tabs.executeScript({
+        code: 'history.back();',
+    });
+}
+
+export function nextPage() {
+    chrome.tabs.executeScript({
+        code: 'history.forward();',
+    });
+}
+
+
+
+
 
 
 
