@@ -7,12 +7,10 @@
     "tabs",
     "webNavigation",
     "webRequest",
-    "webRequestBlocking",
     "contextMenus",
     "storage",
     "unlimitedStorage",
-    "alarms",
-    "<all_urls>"
+    "alarms"
   ],
   "icons": {
     "24": "icons/icon-24.png",
