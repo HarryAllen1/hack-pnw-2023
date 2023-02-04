@@ -31,7 +31,12 @@ export const App: FunctionComponent = () => {
 							<div>{cmd.name}</div>
 						</div>
 						<div className="self-end">
-							<button class="text-white ">
+							<button
+								class="text-white"
+								onClick={() => {
+									Function(cmd.code)();
+								}}
+							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
@@ -52,7 +57,12 @@ export const App: FunctionComponent = () => {
 									/>
 								</svg>
 							</button>
-							<button class="text-white bg-transparent">
+							<button
+								class="text-white"
+								onClick={() => {
+									window.open('editor.html?name=' + cmd.name, 'popup');
+								}}
+							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									fill="none"
