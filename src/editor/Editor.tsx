@@ -1,16 +1,30 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import Preact from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import functions from '../functions?raw';
 import '../index.css';
-import { Command, getCommands, setCommands } from '../storage';
+import { getCommands, setCommands } from '../storage';
 import styles from './Editor.module.css';
+import functions from './functionTypes.d.ts?raw';
 import './userWorker';
+import { getHighlighter, setCDN } from 'shiki';
 
 const Editor: Preact.FunctionComponent = () => {
 	const [editor, setEditor] =
 		useState<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const monacoEl = useRef(null);
+
+	useEffect(() => {
+		setCDN('https://unpkg.com/shiki/');
+		getHighlighter({
+			theme: 'one-dark-pro',
+			langs: ['typescript'],
+		}).then((hl) => {
+			document.querySelectorAll('pre').forEach((block) => {
+				const code = hl.codeToHtml(block.textContent!, { lang: 'typescript' });
+				block.innerHTML = code;
+			});
+		});
+	}, []);
 
 	useEffect(() => {
 		(async () => {
@@ -22,6 +36,8 @@ const Editor: Preact.FunctionComponent = () => {
 			if (monacoEl) {
 				setEditor((editor) => {
 					if (editor) return;
+
+					console.log(functions);
 
 					monaco.languages.typescript.javascriptDefaults.addExtraLib(
 						functions,
@@ -35,7 +51,7 @@ const Editor: Preact.FunctionComponent = () => {
 
 					return monaco.editor.create(monacoEl.current!, {
 						value: [thisCommand?.code].join('\n'),
-						language: 'typescript',
+						language: 'javascript',
 						theme: localStorage.getItem('shortcuts-editor-theme') || 'vs-dark',
 					}) as monaco.editor.IStandaloneCodeEditor | any;
 				});
@@ -51,17 +67,11 @@ const Editor: Preact.FunctionComponent = () => {
 				<h1>
 					Shortcut: {new URLSearchParams(window.location.search).get('name')}
 				</h1>
-				<p>
-					How to run a command:
-					<br />
-					commandName(arg1, arg2, arg3, ...)
-					<br />
-					<br />
-					Example:
-					<code>
-						<pre>{`newTab("https://google.com")`}</pre>
-					</code>
-				</p>
+				<p>How to run a command:</p>
+				<pre>commandName(...args)</pre>
+				<p>Example:</p>
+				<pre>newTab("https://google.com")</pre>
+
 				<br />
 				<label for="themePicker">Theme</label>
 				<select
@@ -96,11 +106,7 @@ const Editor: Preact.FunctionComponent = () => {
 						console.log(monaco.editor.getEditors()[0]);
 						const code = monaco.editor.getEditors()[0]?.getValue();
 						if (code) {
-							console.log('code', code);
-							const worker = new Worker('userWorker.js');
-							//remove previous command of the same name
-							let commands = await getCommands();
-							commands = commands.filter(
+							let commands = (await getCommands()).filter(
 								(cmd) =>
 									cmd.name !==
 									new URLSearchParams(window.location.search).get('name')
