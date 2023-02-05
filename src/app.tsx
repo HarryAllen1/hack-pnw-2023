@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import './app.css';
 import { Command, getCommands, setCommands } from './storage';
 
@@ -8,17 +8,10 @@ export const App: FunctionComponent = () => {
 	const [creating, setCreating] = useState(false);
 	const newInput = useRef<HTMLInputElement>(null);
 
-	useEffect(() => {
-		(async () => {
-			await setCommands([
-				{
-					name: 'asdf',
-					code: "console.log('asdf');",
-				},
-			]);
-			setCmds(await getCommands());
-		})();
-	}, []);
+	(async () => {
+		setCmds([...(await getCommands())]);
+	})();
+
 	return (
 		<div className="w-48 h-96">
 			<h1 class="text-2xl mb-2 text-center">Commands</h1>
