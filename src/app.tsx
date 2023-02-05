@@ -10,7 +10,7 @@ export const App: FunctionComponent = () => {
 
 	useEffect(() => {
 		document.title = 'Shortcut Editor';
-		(async () => {
+		void (async () => {
 			const tempArray = await getCommands();
 			const sortedArray = tempArray.sort((n1, n2) => {
 				if (n1.name > n2.name) {
@@ -44,7 +44,7 @@ export const App: FunctionComponent = () => {
 		setCmds([...(await getCommands())]);
 		window.close();
 		window.open(
-			`editor.html?name=${newInput.current?.value}`,
+			`editor.html?name=${newInput.current?.value ?? 'New Command'}`,
 			'editor',
 			'popup'
 		);
@@ -110,12 +110,14 @@ export const App: FunctionComponent = () => {
 							</button>
 							<button
 								class="text-white"
-								onClick={async () => {
-									await setCommands(
-										commands.filter((c) => c.name !== cmd.name)
-									);
-									setCmds(await getCommands());
-								}}
+								onClick={
+									void (async () => {
+										await setCommands(
+											commands.filter((c) => c.name !== cmd.name)
+										);
+										setCmds(await getCommands());
+									})
+								}
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -142,16 +144,20 @@ export const App: FunctionComponent = () => {
 						<input
 							placeholder="Name"
 							ref={newInput}
-							onKeyDown={async (e) => {
-								if (e.key === 'Enter') {
-									await create();
-								}
-							}}
+							onKeyDown={
+								void (async (e: KeyboardEvent) => {
+									if (e.key === 'Enter') {
+										await create();
+									}
+								})
+							}
 						/>
 						<button
-							onClick={async () => {
-								await create();
-							}}
+							onClick={
+								void (async () => {
+									await create();
+								})
+							}
 						>
 							Create
 						</button>

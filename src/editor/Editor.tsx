@@ -14,40 +14,38 @@ const Editor: Preact.FunctionComponent = () => {
 
 	useEffect(() => {
 		document.querySelectorAll('pre').forEach((el) => {
-			monaco.editor.colorizeElement(el, {
+			void monaco.editor.colorizeElement(el, {
 				theme: 'vs-dark',
 			});
 		});
 	}, []);
 
 	useEffect(() => {
-		(async () => {
+		void (async () => {
 			const commands = await getCommands();
 			const thisCommand = commands.find(
 				(cmd) =>
 					cmd.name === new URLSearchParams(window.location.search).get('name')
 			);
-			if (monacoEl) {
-				setEditor((editor) => {
-					if (editor) return;
+			setEditor((editor) => {
+				if (editor) return;
 
-					monaco.languages.typescript.javascriptDefaults.addExtraLib(
-						functions,
-						'ts:filename/functions.d.ts'
-					);
-					monaco.editor.createModel(
-						functions,
-						'typescript',
-						monaco.Uri.parse('ts:filename/functions.d.ts')
-					);
+				monaco.languages.typescript.javascriptDefaults.addExtraLib(
+					functions,
+					'ts:filename/functions.d.ts'
+				);
+				monaco.editor.createModel(
+					functions,
+					'typescript',
+					monaco.Uri.parse('ts:filename/functions.d.ts')
+				);
 
-					return monaco.editor.create(monacoEl.current!, {
-						value: [thisCommand?.code].join('\n'),
-						language: 'javascript',
-						theme: localStorage.getItem('shortcuts-editor-theme') || 'vs-dark',
-					}) as monaco.editor.IStandaloneCodeEditor | any;
+				return monaco.editor.create(monacoEl.current!, {
+					value: [thisCommand?.code].join('\n'),
+					language: 'javascript',
+					theme: localStorage.getItem('shortcuts-editor-theme') ?? 'vs-dark',
 				});
-			}
+			});
 		})();
 
 		return () => editor?.dispose();
@@ -84,7 +82,7 @@ const Editor: Preact.FunctionComponent = () => {
 				</select>
 				<button
 					onClick={() => {
-						monaco.editor
+						void monaco.editor
 							.getEditors()[0]
 							.getAction('editor.action.formatDocument')
 							.run();
@@ -94,27 +92,29 @@ const Editor: Preact.FunctionComponent = () => {
 				</button>
 				<br />
 				<button
-					onClick={async () => {
-						console.log(monaco.editor.getEditors()[0]);
-						const code = monaco.editor.getEditors()[0]?.getValue();
-						if (code) {
-							const commands = (await getCommands()).filter(
-								(cmd) =>
-									cmd.name !==
-									new URLSearchParams(window.location.search).get('name')
-							);
-							await setCommands([
-								...commands,
-								{
-									name:
-										new URLSearchParams(window.location.search).get('name') ||
-										'',
-									code: code,
-								},
-							]);
-							console.log(await getCommands());
-						}
-					}}
+					onClick={
+						void (async () => {
+							console.log(monaco.editor.getEditors()[0]);
+							const code = monaco.editor.getEditors()[0]?.getValue();
+							if (code) {
+								const commands = (await getCommands()).filter(
+									(cmd) =>
+										cmd.name !==
+										new URLSearchParams(window.location.search).get('name')
+								);
+								await setCommands([
+									...commands,
+									{
+										name:
+											new URLSearchParams(window.location.search).get('name') ??
+											'',
+										code: code,
+									},
+								]);
+								console.log(await getCommands());
+							}
+						})
+					}
 				>
 					Save
 				</button>
