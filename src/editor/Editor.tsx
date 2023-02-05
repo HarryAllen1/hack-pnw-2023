@@ -46,70 +46,73 @@ const Editor: Preact.FunctionComponent = () => {
 	}, [monacoEl.current]);
 
 	return (
-		<div>
-			<h1>
-				Shortcut: {new URLSearchParams(window.location.search).get('name')}
-			</h1>
-			<p>
-				How to run a command:
+		<div class="flex flex-row">
+			<div class="w-72 p-4">
+				<h1>
+					Shortcut: {new URLSearchParams(window.location.search).get('name')}
+				</h1>
+				<p>
+					How to run a command:
+					<br />
+					commandName(arg1, arg2, arg3, ...)
+					<br />
+					<br />
+					Example:
+					<code>
+						<pre>{`newTab("https://google.com")`}</pre>
+					</code>
+				</p>
 				<br />
-				commandName(arg1, arg2, arg3, ...)
+				<label for="themePicker">Theme</label>
+				<select
+					onChange={(e) => {
+						if ((e.target as HTMLSelectElement).value)
+							monaco.editor.setTheme((e.target as HTMLSelectElement).value);
+						localStorage.setItem(
+							'shortcuts-editor-theme',
+							(e.target as HTMLSelectElement).value
+						);
+					}}
+					name="themePicker"
+					id="themePicker"
+				>
+					<option value=""></option>
+					<option value="vs-dark">VS Dark</option>
+					<option value="vs">VS Light</option>
+				</select>
+				<button
+					onClick={() => {
+						monaco.editor
+							.getEditors()[0]
+							.getAction('editor.action.formatDocument')
+							.run();
+					}}
+				>
+					Format
+				</button>
 				<br />
-				<br />
-				Example:
-				<code>
-					<pre>{`newTab("https://google.com")`}</pre>
-				</code>
-			</p>
-			<br />
-			<label for="themePicker">Theme</label>
-			<select
-				onChange={(e) => {
-					if ((e.target as HTMLSelectElement).value)
-						monaco.editor.setTheme((e.target as HTMLSelectElement).value);
-					localStorage.setItem(
-						'shortcuts-editor-theme',
-						(e.target as HTMLSelectElement).value
-					);
-				}}
-				name="themePicker"
-				id="themePicker"
-			>
-				<option value=""></option>
-				<option value="vs-dark">VS Dark</option>
-				<option value="vs">VS Light</option>
-			</select>
-			<button
-				onClick={() => {
-					monaco.editor
-						.getEditors()[0]
-						.getAction('editor.action.formatDocument')
-						.run();
-				}}
-			>
-				Format
-			</button>
-			<br />
-			<button
-				onClick={async () => {
-					console.log('saving...');
-					const code = editor?.getValue();
-					if (code) {
-						const worker = new Worker('userWorker.js');
-						await setCommands([
-							...(await getCommands()),
-							{
-								name:
-									new URLSearchParams(window.location.search).get('name') || '',
-								code: code,
-							},
-						]);
-						console.log('saved');
-					}
-				}}
-			>
-				Save
-			</button>
+				<button
+					onClick={async () => {
+						console.log('saving...');
+						const code = editor?.getValue();
+						if (code) {
+							const worker = new Worker('userWorker.js');
+							await setCommands([
+								...(await getCommands()),
+								{
+									name:
+										new URLSearchParams(window.location.search).get('name') ||
+										'',
+									code: code,
+								},
+							]);
+							console.log('saved');
+						}
+					}}
+				>
+					Save
+				</button>
+			</div>
 			<div className={styles.Editor} ref={monacoEl}></div>
 		</div>
 	);
