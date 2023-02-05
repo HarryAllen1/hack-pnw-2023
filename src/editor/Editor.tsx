@@ -14,6 +14,7 @@ const Editor: Preact.FunctionComponent = () => {
 
 	const save = () => {
 		const code = editor.state.doc.toString();
+		console.log(code, name);
 		getCommands().then(async (commands) => {
 			const actualCommands = commands.filter((cmd) => cmd.name !== name);
 
