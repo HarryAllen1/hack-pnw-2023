@@ -36,6 +36,7 @@ const Editor: Preact.FunctionComponent = () => {
 				<pre data-lang="javascript">newTab("https://google.com")</pre>
 
 				<button
+					class="btn"
 					onClick={async () => {
 						const code = editor.state.doc.toString();
 						if (code) {
