@@ -22,16 +22,14 @@ const Editor: Preact.FunctionComponent = () => {
 
 	useEffect(() => {
 		(async () => {
-			let commands = await getCommands();
-			let thisCommand = commands.find(
+			const commands = await getCommands();
+			const thisCommand = commands.find(
 				(cmd) =>
 					cmd.name === new URLSearchParams(window.location.search).get('name')
 			);
 			if (monacoEl) {
 				setEditor((editor) => {
 					if (editor) return;
-
-					console.log(functions);
 
 					monaco.languages.typescript.javascriptDefaults.addExtraLib(
 						functions,
@@ -100,7 +98,7 @@ const Editor: Preact.FunctionComponent = () => {
 						console.log(monaco.editor.getEditors()[0]);
 						const code = monaco.editor.getEditors()[0]?.getValue();
 						if (code) {
-							let commands = (await getCommands()).filter(
+							const commands = (await getCommands()).filter(
 								(cmd) =>
 									cmd.name !==
 									new URLSearchParams(window.location.search).get('name')

@@ -1,4 +1,4 @@
-let defaultURL = 'https://www.google.com';
+const defaultURL = 'https://www.google.com';
 
 export const openNewTab = (
 	url = defaultURL,

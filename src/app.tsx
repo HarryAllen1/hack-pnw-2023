@@ -11,8 +11,8 @@ export const App: FunctionComponent = () => {
 	useEffect(() => {
 		document.title = 'Shortcut Editor';
 		(async () => {
-			let tempArray = await getCommands();
-			let sortedArray = tempArray.sort((n1, n2) => {
+			const tempArray = await getCommands();
+			const sortedArray = tempArray.sort((n1, n2) => {
 				if (n1.name > n2.name) {
 					return 1;
 				}
@@ -29,7 +29,7 @@ export const App: FunctionComponent = () => {
 	}, []);
 
 	async function create() {
-		let existingCommands = await getCommands();
+		const existingCommands = await getCommands();
 		if (existingCommands.find((cmd) => cmd.name === newInput.current?.value)) {
 			alert('A command with that name already exists!');
 			return;
