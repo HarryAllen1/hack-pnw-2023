@@ -6,12 +6,25 @@ import '../index.css';
 import { getCommands, setCommands } from '../storage';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { keymap } from '@codemirror/view';
+import functionSigs from './functionTypes.d.ts?raw';
 
 const Editor: Preact.FunctionComponent = () => {
 	const monacoEl = useRef<HTMLDivElement>(null);
 	const [editor, setEditor] = useState<EditorView>();
 	const name = new URLSearchParams(window.location.search).get('name') ?? '';
 	const [functions, setFunctions] = useState<any>(null);
+	const [functionTypes, setFunctionTypes] = useState<any>(null);
+
+	//console.log(functionSigs);
+
+	const functionSignatures = functionSigs.split('export declare const ');
+	const functionNames = functionSignatures.map((func: string) => {
+		return func.split(':')[0];
+	});
+	const functionParameters = functionSignatures.map((func: string) => {
+		console.log(func.split(':(')[1]);
+		return func.split(':(')[1]?.split(')')[0];
+	});
 
 	import('../functions').then((mod) =>
 		setFunctions(
@@ -87,7 +100,9 @@ const Editor: Preact.FunctionComponent = () => {
 								editor?.dispatch({
 									changes: {
 										from: editor.state.doc.length,
-										insert: `${func.label}()`,
+										insert: `${func.label}(${
+											functionParameters[functionNames.indexOf(func.label)]
+										})`,
 									},
 								});
 							}
