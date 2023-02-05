@@ -1,11 +1,11 @@
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import Preact from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+import functions from '../functions?raw';
 import '../index.css';
-import { Command, getCommands, setCommands } from '../storage';
+import { Command, getCommands } from '../storage';
 import styles from './Editor.module.css';
 import './userWorker';
-import functions from '../functions?raw';
 
 const Editor: Preact.FunctionComponent = () => {
 	const [editor, setEditor] =
