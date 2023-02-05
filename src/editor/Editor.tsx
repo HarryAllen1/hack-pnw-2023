@@ -1,6 +1,6 @@
 import { javascript } from '@codemirror/lang-javascript';
 import { EditorView, basicSetup } from 'codemirror';
-import Preact from 'preact';
+import type Preact from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import '../index.css';
 import { getCommands, setCommands } from '../storage';
