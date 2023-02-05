@@ -10,9 +10,9 @@ export const openNewTab = (
 		url = 'chrome://incognito/' + url;
 	}
 	if (newWindow) {
-		chrome.windows.create({ url: url, focused: focus });
+		void chrome.windows.create({ url: url, focused: focus });
 	} else {
-		chrome.tabs.create({ url: url, active: focus });
+		void chrome.tabs.create({ url: url, active: focus });
 	}
 };
 
@@ -87,7 +87,7 @@ export const openHelp = () => {
 };
 
 export const clearBrowsingData = (timePeriod: number) => {
-	chrome.browsingData.remove(
+	void chrome.browsingData.remove(
 		{
 			since: timePeriod,
 		},
@@ -109,7 +109,7 @@ export const clearBrowsingData = (timePeriod: number) => {
 };
 
 export const clearCookies = (timePeriod: number) => {
-	chrome.browsingData.remove(
+	void chrome.browsingData.remove(
 		{
 			since: timePeriod,
 		},
@@ -122,7 +122,7 @@ export const clearCookies = (timePeriod: number) => {
 export const clearCookiesOnPage = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
-			chrome.browsingData.remove(
+			void chrome.browsingData.remove(
 				{
 					originTypes: {
 						unprotectedWeb: true,
@@ -137,7 +137,7 @@ export const clearCookiesOnPage = () => {
 };
 
 export const clearHistory = (timePeriod: number) => {
-	chrome.browsingData.remove(
+	void chrome.browsingData.remove(
 		{
 			since: timePeriod,
 		},
@@ -148,7 +148,7 @@ export const clearHistory = (timePeriod: number) => {
 };
 
 export const clearCache = (timePeriod: number) => {
-	chrome.browsingData.remove(
+	void chrome.browsingData.remove(
 		{
 			since: timePeriod,
 		},
@@ -159,7 +159,7 @@ export const clearCache = (timePeriod: number) => {
 };
 
 export const clearPasswords = (timePeriod: number) => {
-	chrome.browsingData.remove(
+	void chrome.browsingData.remove(
 		{
 			since: timePeriod,
 		},
@@ -170,7 +170,7 @@ export const clearPasswords = (timePeriod: number) => {
 };
 
 export const clearFormData = (timePeriod: number) => {
-	chrome.browsingData.remove(
+	void chrome.browsingData.remove(
 		{
 			since: timePeriod,
 		},
@@ -181,59 +181,59 @@ export const clearFormData = (timePeriod: number) => {
 };
 
 export const scrollToTop = () => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: 'window.scrollTo({ top: 0, behavior: "smooth" });',
 	});
 };
 
 export const scrollToBottom = () => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: 'window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });',
 	});
 };
 
 export const scrollDown = (amount = 100) => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `window.scrollBy(0, ${amount});`,
 	});
 };
 
 export const scrollUp = (amount = 100) => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `window.scrollBy(0, -${amount});`,
 	});
 };
 
 export const scrollLeft = (amount = 100) => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `window.scrollBy(-${amount}, 0);`,
 	});
 };
 
 export const scrollRight = (amount = 100) => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `window.scrollBy(${amount}, 0);`,
 	});
 };
 
 export const zoomIn = (amount = 0.1) => {
 	chrome.tabs.getZoom((zoomFactor) => {
-		chrome.tabs.setZoom(zoomFactor + amount);
+		void chrome.tabs.setZoom(zoomFactor + amount);
 	});
 };
 
 export const zoomOut = (amount = 0.1) => {
 	chrome.tabs.getZoom((zoomFactor) => {
-		chrome.tabs.setZoom(zoomFactor - amount);
+		void chrome.tabs.setZoom(zoomFactor - amount);
 	});
 };
 
 export const zoomReset = () => {
-	chrome.tabs.setZoom(1);
+	void chrome.tabs.setZoom(1);
 };
 
 export const setZoom = (amount: number) => {
-	chrome.tabs.setZoom(amount);
+	void chrome.tabs.setZoom(amount);
 };
 
 export const waitForTabToLoad = (callback: () => void) => {
@@ -279,7 +279,7 @@ export const previousTab = () => {
 			const previousTab = tabs[previousTabIndex];
 			if (previousTab) {
 				previousTab.id
-					? chrome.tabs.update(previousTab.id, { active: true })
+					? void chrome.tabs.update(previousTab.id, { active: true })
 					: null;
 			}
 		}
@@ -293,34 +293,34 @@ export const nextTab = () => {
 			const nextTabIndex = activeTabIndex + 1;
 			const nextTab = tabs[nextTabIndex];
 			if (nextTab) {
-				nextTab.id ? chrome.tabs.update(nextTab.id, { active: true }) : null;
+				nextTab.id ? void chrome.tabs.update(nextTab.id, { active: true }) : null;
 			}
 		}
 	});
 };
 
 export const previousPage = () => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: 'history.back();',
 	});
 };
 
 export const nextPage = () => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: 'history.forward();',
 	});
 };
 
 export const reloadPage = () => {
-	chrome.tabs.reload();
+	void chrome.tabs.reload();
 };
 
 export const reloadPageBypassingCache = () => {
-	chrome.tabs.reload({ bypassCache: true });
+	void chrome.tabs.reload({ bypassCache: true });
 };
 
 export const replaceTextInPage = (find: string, replace: string) => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `document.body.innerHTML = document.body.innerHTML.replace(/${find}/g, '${replace}');`,
 	});
 };
@@ -328,7 +328,7 @@ export const replaceTextInPage = (find: string, replace: string) => {
 export const downloadPage = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
-			chrome.downloads.download({
+			void chrome.downloads.download({
 				url: tabs[0].url ? tabs[0].url : '',
 			});
 		}
@@ -342,8 +342,8 @@ export const downloadImage = () => {
 		},
 		(results) => {
 			if (results) {
-				chrome.downloads.download({
-					url: results[0],
+				void chrome.downloads.download({
+					url: results[0] as string,
 				});
 			}
 		}
@@ -353,20 +353,20 @@ export const downloadImage = () => {
 export const postMessageToActiveTab = (message: any) => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
-			chrome.tabs.sendMessage(tabs[0].id ? tabs[0].id : 0, message);
+			void chrome.tabs.sendMessage(tabs[0].id ? tabs[0].id : 0, message);
 		}
 	});
 };
 
 export const switchToTabByIndex = (tabId: number) => {
-	chrome.tabs.update(tabId, { active: true });
+	void chrome.tabs.update(tabId, { active: true });
 };
 
 export const switchToTab = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	chrome.tabs.query({ currentWindow: true }, (tabs) => {
 		const tab = tabs.find(callback);
 		if (tab) {
-			tab.id ? chrome.tabs.update(tab.id, { active: true }) : null;
+			tab.id ? void chrome.tabs.update(tab.id, { active: true }) : null;
 		}
 	});
 };
@@ -401,20 +401,20 @@ export const reopenClosedTab = (numberOfTabs = 1) => {
 };
 
 export const invertColor = () => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `document.body.style.filter = 'hue-rotate(180deg)';`,
 	});
 };
 
 export const randomColor = () => {
 	const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `document.body.style.filter = 'hue-rotate(${randomColor}deg)';`,
 	});
 };
 
 export const scrollToElement = (selector: string) => {
-	chrome.tabs.executeScript({
+	void chrome.tabs.executeScript({
 		code: `document.querySelector('${selector}').scrollIntoView();`,
 	});
 };
