@@ -10,7 +10,7 @@ export const App: FunctionComponent = () => {
 	const newInput = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		document.title = 'Shortcut Editor';
+		document.title = 'Shortcuts Editor';
 		(async () => {
 			const tempArray = await getCommands();
 			const sortedArray = tempArray.sort((n1, n2) => {
