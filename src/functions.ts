@@ -276,7 +276,7 @@ export const previousTab = () => {
 		if (tabs[0]) {
 			const activeTabIndex = tabs.findIndex((tab) => tab.active);
 			const previousTabIndex = activeTabIndex - 1;
-			const previousTab = tabs[previousTabIndex];
+			const previousTab = tabs[previousTabIndex] as chrome.tabs.Tab | undefined;
 			if (previousTab) {
 				previousTab.id
 					? void chrome.tabs.update(previousTab.id, { active: true })
@@ -291,9 +291,11 @@ export const nextTab = () => {
 		if (tabs[0]) {
 			const activeTabIndex = tabs.findIndex((tab) => tab.active);
 			const nextTabIndex = activeTabIndex + 1;
-			const nextTab = tabs[nextTabIndex];
+			const nextTab = tabs[nextTabIndex] as chrome.tabs.Tab | undefined;
 			if (nextTab) {
-				nextTab.id ? void chrome.tabs.update(nextTab.id, { active: true }) : null;
+				nextTab.id
+					? void chrome.tabs.update(nextTab.id, { active: true })
+					: null;
 			}
 		}
 	});
@@ -335,22 +337,13 @@ export const downloadPage = () => {
 	});
 };
 
-export const downloadImage = () => {
-	chrome.tabs.executeScript(
-		{
-			code: `document.querySelector('img').src;`,
-		},
-		(results) => {
-			if (results) {
-				void chrome.downloads.download({
-					url: results[0] as string,
-				});
-			}
-		}
-	);
+export const downloadUrl = async (url: string) => {
+	await chrome.downloads.download({
+		url,
+	});
 };
 
-export const postMessageToActiveTab = (message: any) => {
+export const postMessageToActiveTab = (message: unknown) => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			void chrome.tabs.sendMessage(tabs[0].id ? tabs[0].id : 0, message);
