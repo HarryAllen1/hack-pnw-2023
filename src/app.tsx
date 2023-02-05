@@ -25,6 +25,13 @@ export const App: FunctionComponent = () => {
 			});
 			await setCommands(sortedArray);
 			setCmds(sortedArray);
+
+			const allFunctions = await import('./functions');
+			for (const [key, value] of Object.entries(allFunctions)) {
+				if (typeof value === 'function') {
+					(globalThis as any)[key] = value;
+				}
+			}
 		})();
 	}, []);
 
