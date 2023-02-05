@@ -2,7 +2,6 @@ import { FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import './app.css';
 import { Command, getCommands, setCommands } from './storage';
-import hotkeys from 'hotkeys-js';
 
 const modules = import.meta.glob('./functions/**/*.ts');
 let i = 0;
