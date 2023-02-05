@@ -340,10 +340,6 @@ export function downloadPage() {
     });
 }
 
-export function openPornhub() {
-    chrome.tabs.create({ url: 'https://www.pornhub.com' });
-}
-
 export function downloadImage() {
     chrome.tabs.executeScript({
         code: `document.querySelector('img').src;`,
