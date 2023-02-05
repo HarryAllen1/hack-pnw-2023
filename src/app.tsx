@@ -4,6 +4,7 @@ import './app.css';
 import { Command, getCommands, setCommands } from './storage';
 
 export const App: FunctionComponent = () => {
+	console.log(chrome.runtime.lastError);
 	const [commands, setCmds] = useState<Command[]>([]);
 	const [creating, setCreating] = useState(false);
 	const newInput = useRef<HTMLInputElement>(null);
@@ -11,8 +12,8 @@ export const App: FunctionComponent = () => {
 	useEffect(() => {
 		document.title = 'Shortcut Editor';
 		(async () => {
-			let tempArray = await getCommands();
-			let sortedArray = tempArray.sort((n1, n2) => {
+			const tempArray = await getCommands();
+			const sortedArray = tempArray.sort((n1, n2) => {
 				if (n1.name > n2.name) {
 					return 1;
 				}
