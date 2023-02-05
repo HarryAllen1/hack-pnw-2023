@@ -6,7 +6,6 @@ import { getCommands, setCommands } from '../storage';
 import styles from './Editor.module.css';
 import functions from './functionTypes.d.ts?raw';
 import './userWorker';
-import { getHighlighter, setCDN } from 'shiki';
 
 const Editor: Preact.FunctionComponent = () => {
 	const [editor, setEditor] =
@@ -20,14 +19,9 @@ const Editor: Preact.FunctionComponent = () => {
 	});
 
 	useEffect(() => {
-		setCDN('https://unpkg.com/shiki/');
-		getHighlighter({
-			theme: 'one-dark-pro',
-			langs: ['typescript'],
-		}).then((hl) => {
-			document.querySelectorAll('pre').forEach((block) => {
-				const code = hl.codeToHtml(block.textContent!, { lang: 'typescript' });
-				block.innerHTML = code;
+		document.querySelectorAll('pre').forEach((el) => {
+			monaco.editor.colorizeElement(el, {
+				theme: 'vs-dark',
 			});
 		});
 	}, []);
@@ -74,9 +68,9 @@ const Editor: Preact.FunctionComponent = () => {
 					Shortcut: {new URLSearchParams(window.location.search).get('name')}
 				</h1>
 				<p>How to run a command:</p>
-				<pre>commandName(...args)</pre>
+				<pre data-lang="javascript">commandName(...args)</pre>
 				<p>Example:</p>
-				<pre>newTab("https://google.com")</pre>
+				<pre data-lang="javascript">newTab("https://google.com")</pre>
 
 				<br />
 				<label for="themePicker">Theme</label>

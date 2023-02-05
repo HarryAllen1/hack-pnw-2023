@@ -12,8 +12,7 @@
 	"dependencies": {
 		"hotkeys-js": "^3.10.1",
 		"monaco-editor": "^0.34.1",
-		"preact": "^10.11.3",
-		"shiki": "^0.14.0"
+		"preact": "^10.11.3"
 	},
 	"devDependencies": {
 		"@preact/preset-vite": "^2.5.0",

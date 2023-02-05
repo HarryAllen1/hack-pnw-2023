@@ -46,47 +46,47 @@ export const unmuteTabs = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	});
 };
 
-export function muteTab() {
+export const muteTab = () => {
 	muteTabs((tab) => tab.active);
-}
+};
 
-export function unmuteTab() {
+export const unmuteTab = () => {
 	unmuteTabs((tab) => tab.active);
-}
+};
 
-export function duplicateTab() {
+export const duplicateTab = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			tabs[0].id ? chrome.tabs.duplicate(tabs[0].id) : null;
 		}
 	});
-}
+};
 
-export function openFavorites() {
+export const openFavorites = () => {
 	openNewTab('chrome://bookmarks');
-}
+};
 
-export function openDownloads() {
+export const openDownloads = () => {
 	openNewTab('chrome://downloads');
-}
+};
 
-export function openHistory() {
+export const openHistory = () => {
 	openNewTab('chrome://history');
-}
+};
 
-export function openExtensions() {
+export const openExtensions = () => {
 	openNewTab('chrome://extensions');
-}
+};
 
-export function openSettings() {
+export const openSettings = () => {
 	openNewTab('chrome://settings');
-}
+};
 
-export function openHelp() {
+export const openHelp = () => {
 	openNewTab('chrome://help');
-}
+};
 
-export function clearBrowsingData(timePeriod: number) {
+export const clearBrowsingData = (timePeriod: number) => {
 	chrome.browsingData.remove(
 		{
 			since: timePeriod,
@@ -106,9 +106,9 @@ export function clearBrowsingData(timePeriod: number) {
 			webSQL: true,
 		}
 	);
-}
+};
 
-export function clearCookies(timePeriod: number) {
+export const clearCookies = (timePeriod: number) => {
 	chrome.browsingData.remove(
 		{
 			since: timePeriod,
@@ -117,9 +117,9 @@ export function clearCookies(timePeriod: number) {
 			cookies: true,
 		}
 	);
-}
+};
 
-export function clearCookiesOnPage() {
+export const clearCookiesOnPage = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			chrome.browsingData.remove(
@@ -134,9 +134,9 @@ export function clearCookiesOnPage() {
 			);
 		}
 	});
-}
+};
 
-export function clearHistory(timePeriod: number) {
+export const clearHistory = (timePeriod: number) => {
 	chrome.browsingData.remove(
 		{
 			since: timePeriod,
@@ -145,9 +145,9 @@ export function clearHistory(timePeriod: number) {
 			history: true,
 		}
 	);
-}
+};
 
-export function clearCache(timePeriod: number) {
+export const clearCache = (timePeriod: number) => {
 	chrome.browsingData.remove(
 		{
 			since: timePeriod,
@@ -156,9 +156,9 @@ export function clearCache(timePeriod: number) {
 			cache: true,
 		}
 	);
-}
+};
 
-export function clearPasswords(timePeriod: number) {
+export const clearPasswords = (timePeriod: number) => {
 	chrome.browsingData.remove(
 		{
 			since: timePeriod,
@@ -167,9 +167,9 @@ export function clearPasswords(timePeriod: number) {
 			passwords: true,
 		}
 	);
-}
+};
 
-export function clearFormData(timePeriod: number) {
+export const clearFormData = (timePeriod: number) => {
 	chrome.browsingData.remove(
 		{
 			since: timePeriod,
@@ -178,82 +178,82 @@ export function clearFormData(timePeriod: number) {
 			formData: true,
 		}
 	);
-}
+};
 
-export function scrollToTop() {
+export const scrollToTop = () => {
 	chrome.tabs.executeScript({
 		code: 'window.scrollTo({ top: 0, behavior: "smooth" });',
 	});
-}
+};
 
-export function scrollToBottom() {
+export const scrollToBottom = () => {
 	chrome.tabs.executeScript({
 		code: 'window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });',
 	});
-}
+};
 
-export function scrollDown(amount = 100) {
+export const scrollDown = (amount = 100) => {
 	chrome.tabs.executeScript({
 		code: `window.scrollBy(0, ${amount});`,
 	});
-}
+};
 
-export function scrollUp(amount = 100) {
+export const scrollUp = (amount = 100) => {
 	chrome.tabs.executeScript({
 		code: `window.scrollBy(0, -${amount});`,
 	});
-}
+};
 
-export function scrollLeft(amount = 100) {
+export const scrollLeft = (amount = 100) => {
 	chrome.tabs.executeScript({
 		code: `window.scrollBy(-${amount}, 0);`,
 	});
-}
+};
 
-export function scrollRight(amount = 100) {
+export const scrollRight = (amount = 100) => {
 	chrome.tabs.executeScript({
 		code: `window.scrollBy(${amount}, 0);`,
 	});
-}
+};
 
-export function zoomIn(amount = 0.1) {
+export const zoomIn = (amount = 0.1) => {
 	chrome.tabs.getZoom((zoomFactor) => {
 		chrome.tabs.setZoom(zoomFactor + amount);
 	});
-}
+};
 
-export function zoomOut(amount = 0.1) {
+export const zoomOut = (amount = 0.1) => {
 	chrome.tabs.getZoom((zoomFactor) => {
 		chrome.tabs.setZoom(zoomFactor - amount);
 	});
-}
+};
 
-export function zoomReset() {
+export const zoomReset = () => {
 	chrome.tabs.setZoom(1);
-}
+};
 
-export function setZoom(amount: number) {
+export const setZoom = (amount: number) => {
 	chrome.tabs.setZoom(amount);
-}
+};
 
-export function waitForTabToLoad(callback: () => void) {
+export const waitForTabToLoad = (callback: () => void) => {
 	chrome.tabs.onUpdated.addListener(function listener(tabId, changeInfo) {
 		if (changeInfo.status === 'complete') {
 			chrome.tabs.onUpdated.removeListener(listener);
 			callback();
 		}
 	});
-}
+};
 
-export function waitSeconds(seconds: number) {
+export const waitSeconds = (seconds: number) => {
 	return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
-}
+};
 
-export function waitMilliseconds(milliseconds: number) {
+export const waitMilliseconds = (milliseconds: number) => {
 	return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
+};
 
-export function waitUntilElementExists(selector: string) {
+export const waitUntilElementExists = (selector: string) => {
 	return new Promise<void>((resolve) => {
 		const interval = setInterval(() => {
 			if (document.querySelector(selector)) {
@@ -262,16 +262,16 @@ export function waitUntilElementExists(selector: string) {
 			}
 		}, 100);
 	});
-}
+};
 
-export function clickOn(selector: string) {
+export const clickOn = (selector: string) => {
 	const element = document.querySelector(selector);
 	if (element) {
 		(element as HTMLElement).click();
 	}
-}
+};
 
-export function previousTab() {
+export const previousTab = () => {
 	chrome.tabs.query({ currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			const activeTabIndex = tabs.findIndex((tab) => tab.active);
@@ -284,9 +284,9 @@ export function previousTab() {
 			}
 		}
 	});
-}
+};
 
-export function nextTab() {
+export const nextTab = () => {
 	chrome.tabs.query({ currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			const activeTabIndex = tabs.findIndex((tab) => tab.active);
@@ -297,35 +297,35 @@ export function nextTab() {
 			}
 		}
 	});
-}
+};
 
-export function previousPage() {
+export const previousPage = () => {
 	chrome.tabs.executeScript({
 		code: 'history.back();',
 	});
-}
+};
 
-export function nextPage() {
+export const nextPage = () => {
 	chrome.tabs.executeScript({
 		code: 'history.forward();',
 	});
-}
+};
 
-export function reloadPage() {
+export const reloadPage = () => {
 	chrome.tabs.reload();
-}
+};
 
-export function reloadPageBypassingCache() {
+export const reloadPageBypassingCache = () => {
 	chrome.tabs.reload({ bypassCache: true });
-}
+};
 
-export function replaceTextInPage(find: string, replace: string) {
+export const replaceTextInPage = (find: string, replace: string) => {
 	chrome.tabs.executeScript({
 		code: `document.body.innerHTML = document.body.innerHTML.replace(/${find}/g, '${replace}');`,
 	});
-}
+};
 
-export function downloadPage() {
+export const downloadPage = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			chrome.downloads.download({
@@ -333,9 +333,9 @@ export function downloadPage() {
 			});
 		}
 	});
-}
+};
 
-export function downloadImage() {
+export const downloadImage = () => {
 	chrome.tabs.executeScript(
 		{
 			code: `document.querySelector('img').src;`,
@@ -348,19 +348,19 @@ export function downloadImage() {
 			}
 		}
 	);
-}
+};
 
-export function postMessageToActiveTab(message: any) {
+export const postMessageToActiveTab = (message: any) => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			chrome.tabs.sendMessage(tabs[0].id ? tabs[0].id : 0, message);
 		}
 	});
-}
+};
 
-export function switchToTabByIndex(tabId: number) {
+export const switchToTabByIndex = (tabId: number) => {
 	chrome.tabs.update(tabId, { active: true });
-}
+};
 
 export const switchToTab = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	chrome.tabs.query({ currentWindow: true }, (tabs) => {
@@ -371,23 +371,23 @@ export const switchToTab = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	});
 };
 
-export function switchToTabByTitle(title: string) {
+export const switchToTabByTitle = (title: string) => {
 	switchToTab((tab) => tab.title === title);
-}
+};
 
-export function switchToTabByUrlContains(url: string) {
+export const switchToTabByUrlContains = (url: string) => {
 	switchToTab((tab) => (tab.url ? tab.url.includes(url) : false));
-}
+};
 
-export function startReadingAloud(element = document.body.innerText) {
+export const startReadingAloud = (element = document.body.innerText) => {
 	chrome.tts.speak(element);
-}
+};
 
-export function stopReadingAloud() {
+export const stopReadingAloud = () => {
 	chrome.tts.stop();
-}
+};
 
-export function reopenClosedTab(numberOfTabs = 1) {
+export const reopenClosedTab = (numberOfTabs = 1) => {
 	chrome.sessions.getRecentlyClosed(
 		{ maxResults: numberOfTabs },
 		(sessions) => {
@@ -398,77 +398,77 @@ export function reopenClosedTab(numberOfTabs = 1) {
 			});
 		}
 	);
-}
+};
 
-export function invertColor() {
+export const invertColor = () => {
 	chrome.tabs.executeScript({
 		code: `document.body.style.filter = 'hue-rotate(180deg)';`,
 	});
-}
+};
 
-export function randomColor() {
+export const randomColor = () => {
 	const randomColor = Math.floor(Math.random() * 16777215).toString(16);
 	chrome.tabs.executeScript({
 		code: `document.body.style.filter = 'hue-rotate(${randomColor}deg)';`,
 	});
-}
+};
 
-export function scrollToElement(selector: string) {
+export const scrollToElement = (selector: string) => {
 	chrome.tabs.executeScript({
 		code: `document.querySelector('${selector}').scrollIntoView();`,
 	});
-}
+};
 
-export function getTabUrl() {
+export const getTabUrl = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			return tabs[0].url;
 		}
 	});
-}
+};
 
-export function getTabTitle() {
+export const getTabTitle = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			return tabs[0].title;
 		}
 	});
-}
+};
 
-export function getTabId() {
+export const getTabId = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
 			return tabs[0].id;
 		}
 	});
-}
+};
 
-export function getNumberOfTabs() {
+export const getNumberOfTabs = () => {
 	chrome.tabs.query({ currentWindow: true }, (tabs) => {
 		return tabs.length;
 	});
-}
+};
 
-export function getNumberOfWindows() {
+export const getNumberOfWindows = () => {
 	chrome.windows.getAll({ populate: true }, (windows) => {
 		return windows.length;
 	});
-}
+};
 
-export function getNumberOfBookmarks() {
+export const getNumberOfBookmarks = () => {
 	chrome.bookmarks.getTree((bookmarks) => {
 		return bookmarks.length;
 	});
-}
+};
 
-export function getNumberOfHistoryItems() {
+export const getNumberOfHistoryItems = () => {
 	chrome.history.search({ text: '' }, (historyItems) => {
 		return historyItems.length;
 	});
-}
+};
 
-export function getNumberOfInProgressDownloads() {
+export const getNumberOfInProgressDownloads = () => {
 	chrome.downloads.search({ state: 'in_progress' }, (downloads) => {
 		return downloads.length;
 	});
-}
+};
