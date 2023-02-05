@@ -1,10 +1,10 @@
+import { javascript } from '@codemirror/lang-javascript';
+import { EditorView, basicSetup } from 'codemirror';
 import Preact from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import '../index.css';
-import { EditorView, basicSetup } from 'codemirror';
 import { getCommands, setCommands } from '../storage';
-import styles from './Editor.module.css';
-import { javascript } from '@codemirror/lang-javascript';
+import { materialDark } from './darkTheme';
 
 const Editor: Preact.FunctionComponent = () => {
 	const monacoEl = useRef<HTMLDivElement>(null);
@@ -17,7 +17,7 @@ const Editor: Preact.FunctionComponent = () => {
 					cmd.name === new URLSearchParams(window.location.search).get('name')
 			);
 			editor = new EditorView({
-				extensions: [basicSetup, javascript()],
+				extensions: [basicSetup, javascript(), materialDark],
 				parent: monacoEl.current!,
 				doc: thisCommand?.code || '',
 			});
@@ -61,7 +61,10 @@ const Editor: Preact.FunctionComponent = () => {
 				</button>
 			</div>
 			<div
-				class="h-[100vh] w-[calc(100vw-18rem)] bg-white text-black"
+				onClick={() => {
+					editor.focus();
+				}}
+				class="h-[100vh] w-[calc(100vw-18rem)] bg-[#2f3235] text-black"
 				ref={monacoEl}
 			></div>
 		</div>
