@@ -10,19 +10,17 @@ import { keymap } from '@codemirror/view';
 const Editor: Preact.FunctionComponent = () => {
 	const monacoEl = useRef<HTMLDivElement>(null);
 	let editor: EditorView;
+	const name = new URLSearchParams(window.location.search).get('name') ?? '';
 
 	const save = () => {
 		const code = editor.state.doc.toString();
 		getCommands().then(async (commands) => {
-			commands.filter(
-				(cmd) =>
-					cmd.name !== new URLSearchParams(window.location.search).get('name')
-			);
+			commands.filter((cmd) => cmd.name !== name);
 			await setCommands([
 				...commands,
 				{
-					name: new URLSearchParams(window.location.search).get('name') || '',
-					code: code,
+					name,
+					code,
 				},
 			]);
 		});
@@ -32,10 +30,7 @@ const Editor: Preact.FunctionComponent = () => {
 	useEffect(() => {
 		(async () => {
 			let commands = await getCommands();
-			let thisCommand = commands.find(
-				(cmd) =>
-					cmd.name === new URLSearchParams(window.location.search).get('name')
-			);
+			let thisCommand = commands.find((cmd) => cmd.name === name);
 			editor = new EditorView({
 				extensions: [
 					basicSetup,
