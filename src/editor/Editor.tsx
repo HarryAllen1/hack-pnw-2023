@@ -5,7 +5,7 @@ import '../index.css';
 import { Command, getCommands, setCommands } from '../storage';
 import styles from './Editor.module.css';
 import './userWorker';
-import functions from './functions?raw';
+import functions from '../functions?raw';
 
 const Editor: Preact.FunctionComponent = () => {
 	const [editor, setEditor] =
