@@ -11,6 +11,12 @@ export interface Shortcut {
   cmd : Command;
 }
 
+export const getShortcuts = async (): Promise<Shortcut[]> => {
+  if (typeof chrome !== 'undefined' && 'storage' in chrome)
+    return (await chrome.storage.sync.get('shortcuts')).shortcuts ?? [];
+  else return JSON.parse(localStorage.getItem('shortcuts') ?? '[]');
+};
+
 export const getCommands = async (): Promise<Command[]> => {
   if (typeof chrome !== 'undefined' && 'storage' in chrome)
     return (await chrome.storage.sync.get('commands')).commands ?? [];
@@ -29,18 +35,4 @@ export const setCommand = async (name: string, code: string) => {
   if (index === -1) commands.push({ name, code });
   else commands[index].code = code;
   await setCommands(commands);
-};
-
-export const getEditorTheme = async (): Promise<string> => {
-  if (typeof chrome !== 'undefined' && 'storage' in chrome)
-    return (
-      (await chrome.storage.sync.get('editorTheme')).editorTheme ?? 'light'
-    );
-  else return localStorage.getItem('editorTheme') ?? 'light';
-};
-
-export const setEditorTheme = async (theme: string) => {
-  if (typeof chrome !== 'undefined' && 'storage' in chrome)
-    await chrome.storage.sync.set({ editorTheme: theme });
-  else localStorage.setItem('editorTheme', theme);
 };

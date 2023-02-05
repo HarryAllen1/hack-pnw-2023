@@ -416,13 +416,8 @@ export function randomColor() {
         });
 }
 
-
-
-
-
-
-
-
-
-
-
+export function scrollToElement(selector: string) {
+    chrome.tabs.executeScript({
+        code: `document.querySelector('${selector}').scrollIntoView();`,
+    });
+}
