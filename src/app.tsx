@@ -110,7 +110,7 @@ export const App: FunctionComponent = () => {
 									...(await getCommands()),
 									{
 										name: newInput.current?.value ?? 'New Command',
-										code: "console.log('Hello World!');",
+										code: "alert('You have not set this command yet!')",
 									},
 								]);
 								setCmds([...(await getCommands())]);
