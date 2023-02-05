@@ -52,9 +52,7 @@ const Editor: Preact.FunctionComponent = () => {
 	return (
 		<div class="flex flex-row">
 			<div class="w-72 p-4">
-				<h1>
-					Shortcut: {new URLSearchParams(window.location.search).get('name')}
-				</h1>
+				<h1>Shortcut: {name}</h1>
 				<p>How to run a command:</p>
 				<pre data-lang="javascript">commandName(...args)</pre>
 				<p>Example:</p>
