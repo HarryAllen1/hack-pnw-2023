@@ -20,7 +20,7 @@ export const closeTabs = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	chrome.tabs.query({}, (tabs) => {
 		tabs.forEach((tab) => {
 			if (callback(tab)) {
-				tab.id ? chrome.tabs.remove(tab.id) : null;
+				tab.id ? void chrome.tabs.remove(tab.id) : null;
 			}
 		});
 	});
@@ -30,7 +30,7 @@ export const muteTabs = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	chrome.tabs.query({}, (tabs) => {
 		tabs.forEach((tab) => {
 			if (callback(tab)) {
-				tab.id ? chrome.tabs.update(tab.id, { muted: true }) : null;
+				tab.id ? void chrome.tabs.update(tab.id, { muted: true }) : null;
 			}
 		});
 	});
@@ -40,7 +40,7 @@ export const unmuteTabs = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	chrome.tabs.query({}, (tabs) => {
 		tabs.forEach((tab) => {
 			if (callback(tab)) {
-				tab.id ? chrome.tabs.update(tab.id, { muted: false }) : null;
+				tab.id ? void chrome.tabs.update(tab.id, { muted: false }) : null;
 			}
 		});
 	});
@@ -57,7 +57,7 @@ export const unmuteTab = () => {
 export const duplicateTab = () => {
 	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 		if (tabs[0]) {
-			tabs[0].id ? chrome.tabs.duplicate(tabs[0].id) : null;
+			tabs[0].id ? void chrome.tabs.duplicate(tabs[0].id) : null;
 		}
 	});
 };
