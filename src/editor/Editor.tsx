@@ -12,12 +12,6 @@ const Editor: Preact.FunctionComponent = () => {
 		useState<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const monacoEl = useRef(null);
 
-	//close the window.opener when the window is closed
-	window.addEventListener('beforeunload', async (event) => {
-		event.preventDefault();
-		window.opener?.close();
-	});
-
 	useEffect(() => {
 		document.querySelectorAll('pre').forEach((el) => {
 			monaco.editor.colorizeElement(el, {
