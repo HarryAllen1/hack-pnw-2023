@@ -17,8 +17,14 @@
 		"36": "icons/icon-36.png",
 		"48": "icons/icon-48.png"
 	},
-	"action": {
-		"default_popup": "index.html"
+	"browser_action": {
+		"default_popup": "index.html",
+		"default_title": "Shortcut Manager",
+		"default_icon": {
+			"24": "icons/icon-24.png",
+			"36": "icons/icon-36.png",
+			"48": "icons/icon-48.png"
+		}
 	},
 	"background": {
 		"service-worker": "service-worker.js"
