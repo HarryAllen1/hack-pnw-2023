@@ -16,12 +16,6 @@ const Editor: Preact.FunctionComponent = () => {
 
 	useEffect(() => {
 		(async () => {
-			await setCommands([
-				{
-					name: 'asdf',
-					code: "console.log('asdf');",
-				},
-			]);
 			setCmds(await getCommands());
 		})();
 	}, []);
