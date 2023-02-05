@@ -9,7 +9,7 @@ export const App: FunctionComponent = () => {
 	const newInput = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		document.title = 'Shortcuts Editor';
+		document.title = 'Shortcut Editor';
 		(async () => {
 			setCmds(await getCommands());
 		})();

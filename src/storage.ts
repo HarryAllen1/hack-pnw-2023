@@ -4,18 +4,6 @@ export interface Command {
 	code: string;
 }
 
-export interface Shortcut {
-	name: string;
-	shortcut: string;
-	cmd: Command;
-}
-
-export const getShortcuts = async (): Promise<Shortcut[]> => {
-	if (typeof chrome !== 'undefined' && 'storage' in chrome)
-		return (await chrome.storage.sync.get('shortcuts')).shortcuts ?? [];
-	else return JSON.parse(localStorage.getItem('shortcuts') ?? '[]');
-};
-
 export const getCommands = async (): Promise<Command[]> => {
 	if (typeof chrome !== 'undefined' && 'storage' in chrome)
 		return (await chrome.storage.sync.get('commands')).commands ?? [];
