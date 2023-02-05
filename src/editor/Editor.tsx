@@ -93,12 +93,20 @@ const Editor: Preact.FunctionComponent = () => {
 				<br />
 				<button
 					onClick={async () => {
-						console.log('saving...');
-						const code = editor?.getValue();
+						console.log(monaco.editor.getEditors()[0]);
+						const code = monaco.editor.getEditors()[0]?.getValue();
 						if (code) {
+							console.log('code', code);
 							const worker = new Worker('userWorker.js');
+							//remove previous command of the same name
+							let commands = await getCommands();
+							commands = commands.filter(
+								(cmd) =>
+									cmd.name !==
+									new URLSearchParams(window.location.search).get('name')
+							);
 							await setCommands([
-								...(await getCommands()),
+								...commands,
 								{
 									name:
 										new URLSearchParams(window.location.search).get('name') ||
@@ -106,7 +114,7 @@ const Editor: Preact.FunctionComponent = () => {
 									code: code,
 								},
 							]);
-							console.log('saved');
+							console.log(await getCommands());
 						}
 					}}
 				>
