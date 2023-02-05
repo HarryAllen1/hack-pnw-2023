@@ -23,12 +23,13 @@ export const App: FunctionComponent = () => {
 
 				return 0;
 			});
-			await setCommands(sortedArray);
+			// await setCommands(sortedArray);
 			setCmds(sortedArray);
 		})();
 	}, []);
 
 	async function create() {
+		window.close();
 		window.open(
 			`editor.html?name=${newInput.current?.value}`,
 			'editor',
@@ -75,6 +76,7 @@ export const App: FunctionComponent = () => {
 							<button
 								class="text-white"
 								onClick={() => {
+									window.close();
 									window.open('editor.html?name=' + cmd.name, 'popup');
 								}}
 							>
