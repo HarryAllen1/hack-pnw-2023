@@ -11,7 +11,20 @@ export const App: FunctionComponent = () => {
 	useEffect(() => {
 		document.title = 'Shortcut Editor';
 		(async () => {
-			setCmds(await getCommands());
+			let tempArray = await getCommands();
+			let sortedArray = tempArray.sort((n1, n2) => {
+				if (n1.name > n2.name) {
+					return 1;
+				}
+
+				if (n1.name < n2.name) {
+					return -1;
+				}
+
+				return 0;
+			});
+			await setCommands(sortedArray);
+			setCmds(sortedArray);
 		})();
 	}, []);
 
