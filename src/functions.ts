@@ -418,3 +418,57 @@ export function scrollToElement(selector: string) {
 		code: `document.querySelector('${selector}').scrollIntoView();`,
 	});
 }
+
+export function getTabUrl() {
+	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+		if (tabs[0]) {
+			return tabs[0].url;
+		}
+	});
+}
+
+export function getTabTitle() {
+	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+		if (tabs[0]) {
+			return tabs[0].title;
+		}
+	});
+}
+
+export function getTabId() {
+	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+		if (tabs[0]) {
+			return tabs[0].id;
+		}
+	});
+}
+
+export function getNumberOfTabs() {
+	chrome.tabs.query({ currentWindow: true }, (tabs) => {
+		return tabs.length;
+	});
+}
+
+export function getNumberOfWindows() {
+	chrome.windows.getAll({ populate: true }, (windows) => {
+		return windows.length;
+	});
+}
+
+export function getNumberOfBookmarks() {
+	chrome.bookmarks.getTree((bookmarks) => {
+		return bookmarks.length;
+	});
+}
+
+export function getNumberOfHistoryItems() {
+	chrome.history.search({ text: '' }, (historyItems) => {
+		return historyItems.length;
+	});
+}
+
+export function getNumberOfInProgressDownloads() {
+	chrome.downloads.search({ state: 'in_progress' }, (downloads) => {
+		return downloads.length;
+	});
+}

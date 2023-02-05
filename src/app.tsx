@@ -15,6 +15,27 @@ export const App: FunctionComponent = () => {
 		})();
 	}, []);
 
+	async function create() {
+		let existingCommands = await getCommands();
+		if (existingCommands.find((cmd) => cmd.name === newInput.current?.value)) {
+			alert('A command with that name already exists!');
+			return;
+		}
+		await setCommands([
+			...(await getCommands()),
+			{
+				name: newInput.current?.value ?? 'New Command',
+				code: "alert('You have not set this command yet!')",
+			},
+		]);
+		setCmds([...(await getCommands())]);
+		window.open(
+			`editor.html?name=${newInput.current?.value}`,
+			'editor',
+			'popup'
+		);
+		setCreating(false);
+	}
 	return (
 		<div className="w-48 h-96">
 			<h1 class="text-2xl mb-2 text-center">Commands</h1>
@@ -103,23 +124,18 @@ export const App: FunctionComponent = () => {
 			<div>
 				{creating ? (
 					<>
-						<input placeholder="Name" ref={newInput} />
+						<input
+							placeholder="Name"
+							ref={newInput}
+							onKeyDown={async (e) => {
+								if (e.key === 'Enter') {
+									await create();
+								}
+							}}
+						/>
 						<button
 							onClick={async () => {
-								await setCommands([
-									...(await getCommands()),
-									{
-										name: newInput.current?.value ?? 'New Command',
-										code: "alert('You have not set this command yet!')",
-									},
-								]);
-								setCmds([...(await getCommands())]);
-								window.open(
-									`editor.html?name=${newInput.current?.value}`,
-									'editor',
-									'popup'
-								);
-								setCreating(false);
+								await create();
 							}}
 						>
 							Create
