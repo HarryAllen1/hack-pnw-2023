@@ -5,10 +5,30 @@ import { useEffect, useRef } from 'preact/hooks';
 import '../index.css';
 import { getCommands, setCommands } from '../storage';
 import { oneDark } from '@codemirror/theme-one-dark';
+import { keymap } from '@codemirror/view';
 
 const Editor: Preact.FunctionComponent = () => {
 	const monacoEl = useRef<HTMLDivElement>(null);
 	let editor: EditorView;
+
+	const save = () => {
+		const code = editor.state.doc.toString();
+		getCommands().then(async (commands) => {
+			commands.filter(
+				(cmd) =>
+					cmd.name !== new URLSearchParams(window.location.search).get('name')
+			);
+			await setCommands([
+				...commands,
+				{
+					name: new URLSearchParams(window.location.search).get('name') || '',
+					code: code,
+				},
+			]);
+		});
+		return true;
+	};
+
 	useEffect(() => {
 		(async () => {
 			let commands = await getCommands();
@@ -17,7 +37,17 @@ const Editor: Preact.FunctionComponent = () => {
 					cmd.name === new URLSearchParams(window.location.search).get('name')
 			);
 			editor = new EditorView({
-				extensions: [basicSetup, javascript(), oneDark],
+				extensions: [
+					basicSetup,
+					javascript(),
+					oneDark,
+					keymap.of([
+						{
+							key: 'Ctrl-S',
+							run: save,
+						},
+					]),
+				],
 				parent: monacoEl.current!,
 				doc: thisCommand?.code || '',
 			});
@@ -35,29 +65,7 @@ const Editor: Preact.FunctionComponent = () => {
 				<p>Example:</p>
 				<pre data-lang="javascript">newTab("https://google.com")</pre>
 
-				<button
-					class="btn"
-					onClick={async () => {
-						const code = editor.state.doc.toString();
-						if (code) {
-							let commands = (await getCommands()).filter(
-								(cmd) =>
-									cmd.name !==
-									new URLSearchParams(window.location.search).get('name')
-							);
-							await setCommands([
-								...commands,
-								{
-									name:
-										new URLSearchParams(window.location.search).get('name') ||
-										'',
-									code: code,
-								},
-							]);
-							console.log(await getCommands());
-						}
-					}}
-				>
+				<button class="btn" onClick={save}>
 					Save
 				</button>
 			</div>
