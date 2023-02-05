@@ -38,7 +38,7 @@ const Editor: Preact.FunctionComponent = () => {
 					oneDark,
 					keymap.of([
 						{
-							key: 'Ctrl-S',
+							key: 'Alt-S',
 							run: save,
 						},
 					]),
