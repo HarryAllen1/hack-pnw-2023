@@ -10,7 +10,7 @@ export const App: FunctionComponent = () => {
 
 	useEffect(() => {
 		(async () => {
-			setCmds([...(await getCommands())]);
+			setCmds(await getCommands());
 		})();
 	}, []);
 
