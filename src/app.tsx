@@ -4,7 +4,6 @@ import './app.css';
 import { Command, getCommands, setCommands } from './storage';
 
 export const App: FunctionComponent = () => {
-	console.log(chrome.runtime.lastError);
 	const [commands, setCmds] = useState<Command[]>([]);
 	const [creating, setCreating] = useState(false);
 	const newInput = useRef<HTMLInputElement>(null);
