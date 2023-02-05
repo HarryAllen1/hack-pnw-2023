@@ -6,12 +6,8 @@ export interface Command {
 
 export const getCommands = async (): Promise<Command[]> => {
 	if (typeof chrome !== 'undefined' && 'storage' in chrome)
-		return (
-			((await chrome.storage.sync.get('commands')).commands as
-				| Command[]
-				| null) ?? []
-		);
-	else return JSON.parse(localStorage.getItem('commands') ?? '[]') as Command[];
+		return (await chrome.storage.sync.get('commands')).commands ?? [];
+	else return JSON.parse(localStorage.getItem('commands') ?? '[]');
 };
 
 export const setCommands = async (commands: Command[]) => {

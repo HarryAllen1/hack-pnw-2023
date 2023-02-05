@@ -14,43 +14,42 @@ const Editor: Preact.FunctionComponent = () => {
 
 	useEffect(() => {
 		document.querySelectorAll('pre').forEach((el) => {
-			void monaco.editor.colorizeElement(el, {
+			monaco.editor.colorizeElement(el, {
 				theme: 'vs-dark',
 			});
 		});
 	}, []);
 
 	useEffect(() => {
-		void (async () => {
-			const commands = await getCommands();
-			const thisCommand = commands.find(
+		(async () => {
+			let commands = await getCommands();
+			let thisCommand = commands.find(
 				(cmd) =>
 					cmd.name === new URLSearchParams(window.location.search).get('name')
 			);
-			setEditor((editor) => {
-				if (editor) return;
+			if (monacoEl) {
+				setEditor((editor) => {
+					if (editor) return;
 
-				monaco.languages.typescript.javascriptDefaults.addExtraLib(
-					functions,
-					'ts:filename/functions.d.ts'
-				);
-				monaco.editor.createModel(
-					functions,
-					'typescript',
-					monaco.Uri.parse('ts:filename/functions.d.ts')
-				);
+					console.log(functions);
 
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-				return monaco.editor.create(
-					monacoEl.current as unknown as HTMLElement,
-					{
+					monaco.languages.typescript.javascriptDefaults.addExtraLib(
+						functions,
+						'ts:filename/functions.d.ts'
+					);
+					monaco.editor.createModel(
+						functions,
+						'typescript',
+						monaco.Uri.parse('ts:filename/functions.d.ts')
+					);
+
+					return monaco.editor.create(monacoEl.current!, {
 						value: [thisCommand?.code].join('\n'),
 						language: 'javascript',
-						theme: localStorage.getItem('shortcuts-editor-theme') ?? 'vs-dark',
-					}
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				) as monaco.editor.IStandaloneCodeEditor | any;
-			});
+						theme: localStorage.getItem('shortcuts-editor-theme') || 'vs-dark',
+					}) as monaco.editor.IStandaloneCodeEditor | any;
+				});
+			}
 		})();
 
 		return () => editor?.dispose();
@@ -87,7 +86,7 @@ const Editor: Preact.FunctionComponent = () => {
 				</select>
 				<button
 					onClick={() => {
-						void monaco.editor
+						monaco.editor
 							.getEditors()[0]
 							.getAction('editor.action.formatDocument')
 							.run();
@@ -97,29 +96,27 @@ const Editor: Preact.FunctionComponent = () => {
 				</button>
 				<br />
 				<button
-					onClick={
-						void (async () => {
-							console.log(monaco.editor.getEditors()[0]);
-							const code = monaco.editor.getEditors()[0]?.getValue();
-							if (code) {
-								const commands = (await getCommands()).filter(
-									(cmd) =>
-										cmd.name !==
-										new URLSearchParams(window.location.search).get('name')
-								);
-								await setCommands([
-									...commands,
-									{
-										name:
-											new URLSearchParams(window.location.search).get('name') ??
-											'',
-										code: code,
-									},
-								]);
-								console.log(await getCommands());
-							}
-						})
-					}
+					onClick={async () => {
+						console.log(monaco.editor.getEditors()[0]);
+						const code = monaco.editor.getEditors()[0]?.getValue();
+						if (code) {
+							let commands = (await getCommands()).filter(
+								(cmd) =>
+									cmd.name !==
+									new URLSearchParams(window.location.search).get('name')
+							);
+							await setCommands([
+								...commands,
+								{
+									name:
+										new URLSearchParams(window.location.search).get('name') ||
+										'',
+									code: code,
+								},
+							]);
+							console.log(await getCommands());
+						}
+					}}
 				>
 					Save
 				</button>

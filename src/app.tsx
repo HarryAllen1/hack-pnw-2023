@@ -10,9 +10,9 @@ export const App: FunctionComponent = () => {
 
 	useEffect(() => {
 		document.title = 'Shortcut Editor';
-		void (async () => {
-			const tempArray = await getCommands();
-			const sortedArray = tempArray.sort((n1, n2) => {
+		(async () => {
+			let tempArray = await getCommands();
+			let sortedArray = tempArray.sort((n1, n2) => {
 				if (n1.name > n2.name) {
 					return 1;
 				}
@@ -29,7 +29,7 @@ export const App: FunctionComponent = () => {
 	}, []);
 
 	async function create() {
-		const existingCommands = await getCommands();
+		let existingCommands = await getCommands();
 		if (existingCommands.find((cmd) => cmd.name === newInput.current?.value)) {
 			alert('A command with that name already exists!');
 			return;
@@ -44,7 +44,7 @@ export const App: FunctionComponent = () => {
 		setCmds([...(await getCommands())]);
 		window.close();
 		window.open(
-			`editor.html?name=${newInput.current?.value ?? 'New Command'}`,
+			`editor.html?name=${newInput.current?.value}`,
 			'editor',
 			'popup'
 		);
@@ -63,7 +63,6 @@ export const App: FunctionComponent = () => {
 							<button
 								class="text-white"
 								onClick={() => {
-									// eslint-disable-next-line @typescript-eslint/no-implied-eval
 									Function(cmd.code)();
 								}}
 							>
@@ -111,14 +110,12 @@ export const App: FunctionComponent = () => {
 							</button>
 							<button
 								class="text-white"
-								onClick={
-									void (async () => {
-										await setCommands(
-											commands.filter((c) => c.name !== cmd.name)
-										);
-										setCmds(await getCommands());
-									})
-								}
+								onClick={async () => {
+									await setCommands(
+										commands.filter((c) => c.name !== cmd.name)
+									);
+									setCmds(await getCommands());
+								}}
 							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -145,20 +142,16 @@ export const App: FunctionComponent = () => {
 						<input
 							placeholder="Name"
 							ref={newInput}
-							onKeyDown={
-								void (async (e: KeyboardEvent) => {
-									if (e.key === 'Enter') {
-										await create();
-									}
-								})
-							}
+							onKeyDown={async (e) => {
+								if (e.key === 'Enter') {
+									await create();
+								}
+							}}
 						/>
 						<button
-							onClick={
-								void (async () => {
-									await create();
-								})
-							}
+							onClick={async () => {
+								await create();
+							}}
 						>
 							Create
 						</button>
