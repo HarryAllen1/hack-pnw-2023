@@ -5,19 +5,44 @@ import { useEffect, useRef } from 'preact/hooks';
 import '../index.css';
 import { getCommands, setCommands } from '../storage';
 import { oneDark } from '@codemirror/theme-one-dark';
+import { keymap } from '@codemirror/view';
 
 const Editor: Preact.FunctionComponent = () => {
 	const monacoEl = useRef<HTMLDivElement>(null);
 	let editor: EditorView;
+	const name = new URLSearchParams(window.location.search).get('name') ?? '';
+
+	const save = () => {
+		const code = editor.state.doc.toString();
+		getCommands().then(async (commands) => {
+			commands.filter((cmd) => cmd.name !== name);
+			await setCommands([
+				...commands,
+				{
+					name,
+					code,
+				},
+			]);
+		});
+		return true;
+	};
+
 	useEffect(() => {
 		(async () => {
 			let commands = await getCommands();
-			let thisCommand = commands.find(
-				(cmd) =>
-					cmd.name === new URLSearchParams(window.location.search).get('name')
-			);
+			let thisCommand = commands.find((cmd) => cmd.name === name);
 			editor = new EditorView({
-				extensions: [basicSetup, javascript(), oneDark],
+				extensions: [
+					basicSetup,
+					javascript(),
+					oneDark,
+					keymap.of([
+						{
+							key: 'Ctrl-S',
+							run: save,
+						},
+					]),
+				],
 				parent: monacoEl.current!,
 				doc: thisCommand?.code || '',
 			});
@@ -27,36 +52,13 @@ const Editor: Preact.FunctionComponent = () => {
 	return (
 		<div class="flex flex-row">
 			<div class="w-72 p-4">
-				<h1>
-					Shortcut: {new URLSearchParams(window.location.search).get('name')}
-				</h1>
+				<h1>Shortcut: {name}</h1>
 				<p>How to run a command:</p>
 				<pre data-lang="javascript">commandName(...args)</pre>
 				<p>Example:</p>
 				<pre data-lang="javascript">newTab("https://google.com")</pre>
 
-				<button
-					onClick={async () => {
-						const code = editor.state.doc.toString();
-						if (code) {
-							let commands = (await getCommands()).filter(
-								(cmd) =>
-									cmd.name !==
-									new URLSearchParams(window.location.search).get('name')
-							);
-							await setCommands([
-								...commands,
-								{
-									name:
-										new URLSearchParams(window.location.search).get('name') ||
-										'',
-									code: code,
-								},
-							]);
-							console.log(await getCommands());
-						}
-					}}
-				>
+				<button class="btn" onClick={save}>
 					Save
 				</button>
 			</div>
