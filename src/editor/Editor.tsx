@@ -30,8 +30,8 @@ const Editor: Preact.FunctionComponent = () => {
 
 	useEffect(() => {
 		(async () => {
-			let commands = await getCommands();
-			let thisCommand = commands.find((cmd) => cmd.name === name);
+			const commands = await getCommands();
+			const thisCommand = commands.find((cmd) => cmd.name === name);
 			editor = new EditorView({
 				extensions: [
 					basicSetup,
