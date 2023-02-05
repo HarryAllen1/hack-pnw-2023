@@ -3,7 +3,7 @@ import Preact from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import functions from '../functions?raw';
 import '../index.css';
-import { Command, getCommands } from '../storage';
+import { Command, getCommands, setCommands } from '../storage';
 import styles from './Editor.module.css';
 import './userWorker';
 
@@ -12,38 +12,35 @@ const Editor: Preact.FunctionComponent = () => {
 		useState<monaco.editor.IStandaloneCodeEditor | null>(null);
 	const monacoEl = useRef(null);
 
-	const [commands, setCmds] = useState<Command[]>([]);
-
 	useEffect(() => {
 		(async () => {
-			setCmds(await getCommands());
+			let commands = await getCommands();
+			let thisCommand = commands.find(
+				(cmd) =>
+					cmd.name === new URLSearchParams(window.location.search).get('name')
+			);
+			if (monacoEl) {
+				setEditor((editor) => {
+					if (editor) return;
+
+					monaco.languages.typescript.javascriptDefaults.addExtraLib(
+						functions,
+						'ts:filename/functions.d.ts'
+					);
+					monaco.editor.createModel(
+						functions,
+						'typescript',
+						monaco.Uri.parse('ts:filename/functions.d.ts')
+					);
+
+					return monaco.editor.create(monacoEl.current!, {
+						value: [thisCommand?.code].join('\n'),
+						language: 'typescript',
+						theme: localStorage.getItem('shortcuts-editor-theme') || 'vs-dark',
+					}) as monaco.editor.IStandaloneCodeEditor | any;
+				});
+			}
 		})();
-	}, []);
-
-	useEffect(() => {
-		if (monacoEl) {
-			setEditor((editor) => {
-				if (editor) return;
-
-				monaco.languages.typescript.javascriptDefaults.addExtraLib(
-					functions,
-					'ts:filename/functions.d.ts'
-				);
-				monaco.editor.createModel(
-					functions,
-					'typescript',
-					monaco.Uri.parse('ts:filename/functions.d.ts')
-				);
-
-				return monaco.editor.create(monacoEl.current!, {
-					value: ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
-						'\n'
-					),
-					language: 'typescript',
-					theme: localStorage.getItem('shortcuts-editor-theme') || 'vs-dark',
-				}) as monaco.editor.IStandaloneCodeEditor | any;
-			});
-		}
 
 		return () => editor?.dispose();
 	}, [monacoEl.current]);
@@ -65,23 +62,6 @@ const Editor: Preact.FunctionComponent = () => {
 				</code>
 			</p>
 			<br />
-			<p>
-				Available commands:
-				<br />
-				<div className="flex flex-row">
-					{commands.map((cmd) => (
-						<div className="flex flex-row">
-							<code className="mr-2">
-								<pre>{cmd.name}</pre>
-							</code>
-							:
-							<code className="ml-2">
-								<pre>{cmd.code}</pre>
-							</code>
-						</div>
-					))}
-				</div>
-			</p>
 			<label for="themePicker">Theme</label>
 			<select
 				onChange={(e) => {
@@ -108,6 +88,27 @@ const Editor: Preact.FunctionComponent = () => {
 				}}
 			>
 				Format
+			</button>
+			<br />
+			<button
+				onClick={async () => {
+					console.log('saving...');
+					const code = editor?.getValue();
+					if (code) {
+						const worker = new Worker('userWorker.js');
+						await setCommands([
+							...(await getCommands()),
+							{
+								name:
+									new URLSearchParams(window.location.search).get('name') || '',
+								code: code,
+							},
+						]);
+						console.log('saved');
+					}
+				}}
+			>
+				Save
 			</button>
 			<div className={styles.Editor} ref={monacoEl}></div>
 		</div>
