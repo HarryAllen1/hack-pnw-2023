@@ -29,20 +29,6 @@ export const App: FunctionComponent = () => {
 	}, []);
 
 	async function create() {
-		let existingCommands = await getCommands();
-		if (existingCommands.find((cmd) => cmd.name === newInput.current?.value)) {
-			alert('A command with that name already exists!');
-			return;
-		}
-		await setCommands([
-			...(await getCommands()),
-			{
-				name: newInput.current?.value ?? 'New Command',
-				code: "alert('You have not set this command yet!')",
-			},
-		]);
-		setCmds([...(await getCommands())]);
-		window.close();
 		window.open(
 			`editor.html?name=${newInput.current?.value}`,
 			'editor',
@@ -89,7 +75,6 @@ export const App: FunctionComponent = () => {
 							<button
 								class="text-white"
 								onClick={() => {
-									window.close();
 									window.open('editor.html?name=' + cmd.name, 'popup');
 								}}
 							>
