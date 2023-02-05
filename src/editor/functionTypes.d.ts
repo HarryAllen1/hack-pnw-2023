@@ -57,7 +57,7 @@ export declare const reloadPageBypassingCache: () => void;
 export declare const replaceTextInPage: (find: string, replace: string) => void;
 export declare const downloadPage: () => void;
 export declare const downloadImage: () => void;
-export declare const postMessageToActiveTab: (message: any) => void;
+export declare const postMessageToActiveTab: (message: string) => void;
 export declare const switchToTabByIndex: (tabId: number) => void;
 export declare const switchToTab: (
 	callback: (tab: chrome.tabs.Tab) => boolean

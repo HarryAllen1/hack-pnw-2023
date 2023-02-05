@@ -1,1 +1,5 @@
 .eslintrc.cjs
+vite.config.ts
+tsconfig.json
+/dist
+/backend

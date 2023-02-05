@@ -10,5 +10,6 @@ module.exports = {
 		project: ['./tsconfig.json'],
 		tsconfigRootDir: __dirname,
 	},
+	ignorePatterns: ['*.cjs'],
 	root: true,
 };

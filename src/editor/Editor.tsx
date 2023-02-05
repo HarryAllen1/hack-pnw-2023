@@ -40,11 +40,16 @@ const Editor: Preact.FunctionComponent = () => {
 					monaco.Uri.parse('ts:filename/functions.d.ts')
 				);
 
-				return monaco.editor.create(monacoEl.current!, {
-					value: [thisCommand?.code].join('\n'),
-					language: 'javascript',
-					theme: localStorage.getItem('shortcuts-editor-theme') ?? 'vs-dark',
-				});
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return monaco.editor.create(
+					monacoEl.current as unknown as HTMLElement,
+					{
+						value: [thisCommand?.code].join('\n'),
+						language: 'javascript',
+						theme: localStorage.getItem('shortcuts-editor-theme') ?? 'vs-dark',
+					}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				) as monaco.editor.IStandaloneCodeEditor | any;
 			});
 		})();
 

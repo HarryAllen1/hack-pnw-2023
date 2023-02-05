@@ -63,6 +63,7 @@ export const App: FunctionComponent = () => {
 							<button
 								class="text-white"
 								onClick={() => {
+									// eslint-disable-next-line @typescript-eslint/no-implied-eval
 									Function(cmd.code)();
 								}}
 							>
