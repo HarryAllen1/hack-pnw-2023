@@ -6,16 +6,12 @@ export const openNewTab = (
 	newWindow = false,
 	focus = true
 ) => {
-	if (incognito) {
-		url = 'chrome://incognito/' + url;
-	}
 	if (newWindow) {
-		chrome.windows.create({ url: url, focused: focus });
+		chrome.windows.create({ url: url, focused: focus, incognito: incognito });
 	} else {
 		chrome.tabs.create({ url: url, active: focus });
 	}
 };
-
 export const closeTabs = (callback: (tab: chrome.tabs.Tab) => boolean) => {
 	chrome.tabs.query({}, (tabs) => {
 		tabs.forEach((tab) => {
